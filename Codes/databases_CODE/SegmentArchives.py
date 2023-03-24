@@ -7,14 +7,14 @@ def SegmentArchives(tagName, folder_Dir=None, newFolder_Dir = None, segmentNumbe
 
     #--------------------------------------------------------------------------------------------
     if folder_Dir == None:
-        folder_Dir = r"C:\Users\Misael\Documents\Estudos\Assistente_Transportadora\Downloads"
+        folder_Dir = r"C:\Users\Misael\Documents\Estudos\Sistema-E-log\Downloads"
     if not Path(folder_Dir).exists():
         Path.mkdir(folder_Path)
 
     folder_Path = Path(folder_Dir)
     #--------------------------------------------------------------------------------------------
     if newFolder_Dir == None:
-        newFolder_Dir = r"C:\Users\Misael\Documents\Estudos\Assistente_Transportadora\Relatorios" + "\\" + categoriName
+        newFolder_Dir = r"C:\Users\Misael\Documents\Estudos\Sistema-E-log\Relatorios" + "\\" + categoriName
     if not Path.exists(Path(newFolder_Dir)):
         Path.mkdir(newFolder_Dir)
     #--------------------------------------------------------------------------------------------

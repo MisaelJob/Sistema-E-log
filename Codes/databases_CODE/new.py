@@ -17,7 +17,7 @@ def StandardFormat(sheet_Dir, nomeCliente):
     if Path.exists(Path(newSheet_Dir)):
        Path(newSheet_Dir).unlink()
     #-------------------------------------------------------------------------------------------------------------
-    configSheet = pd.read_excel(r"C:\Users\Misael\Documents\Estudos\Assistente_Transportadora\Config\config.xlsx", sheet_name='Columns')
+    configSheet = pd.read_excel(r"C:\Users\Misael\Documents\Estudos\Sistema-E-log\Config\config.xlsx", sheet_name='Columns')
     clientLine = configSheet.loc[configSheet['CLIENTE'] == nomeCliente].values.tolist()
     standardLine = configSheet.columns.tolist()
     #-------------------------------------------------------------------------------------------------------------

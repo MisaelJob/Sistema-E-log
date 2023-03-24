@@ -8,7 +8,7 @@ def DuplicateFilter(dataFrame):
     dataFrame = dataFrame.drop_duplicates()
     dataFrame =  dataFrame.reset_index(drop=True)
     
-    configSheet = pd.read_excel(r"C:\Users\Misael\Documents\Estudos\Assistente_Transportadora\Config\config.xlsx", sheet_name='Multiplas')
+    configSheet = pd.read_excel(r"C:\Users\Misael\Documents\Estudos\Sistema-E-log\Config\config.xlsx", sheet_name='Multiplas')
     colList = configSheet['MULTIPLAS'].tolist()
 
     concatLinhas1 = ""

@@ -25,7 +25,7 @@ def ToWeight(dataFrame,columnsName):
     print("---- ToWeight finalizado com sucesso!")
     return dataFrame
 
-arquivoPD = pd.read_excel(r"C:\Users\Misael\Documents\Estudos\Assistente_Transportadora\Relatorios\ARQUIVO DE TEXTO BASE 1ªQ0123.xlsx", sheet_name='BD')
+arquivoPD = pd.read_excel(r"C:\Users\Misael\Documents\Estudos\Sistema-E-log\Relatorios\ARQUIVO DE TEXTO BASE 1ªQ0123.xlsx", sheet_name='BD')
 
 ToWeight(arquivoPD,"PESO A")
 

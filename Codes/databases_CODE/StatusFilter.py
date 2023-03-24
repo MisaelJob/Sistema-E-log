@@ -6,7 +6,7 @@ import numpy
 def StatusFilter(clientList, dataFrame, columnsName):
     
     
-    configSheet= pd.read_excel(r"C:\Users\Misael\Documents\Estudos\Assistente_Transportadora\Config\config.xlsx", sheet_name='Status')
+    configSheet= pd.read_excel(r"C:\Users\Misael\Documents\Estudos\Sistema-E-log\Config\config.xlsx", sheet_name='Status')
     
     if type(clientList) == list:
         listStatus = clientList

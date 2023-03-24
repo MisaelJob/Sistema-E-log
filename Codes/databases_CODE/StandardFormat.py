@@ -8,10 +8,10 @@ def StandardFormat(Cliente,sheet_Dir,newSheetFolder_Dir = None):
 
     #Obrigado a passar porque é um arquivo porra
     #if sheet_Dir == None:
-    #    sheet_Dir = r"C:\Users\Misael\Documents\Estudos\Assistente_Transportadora\Downloads"
+    #    sheet_Dir = r"C:\Users\Misael\Documents\Estudos\Sistema-E-log\Downloads"
 
     if newSheetFolder_Dir == None:
-        newSheetFolder_Dir = r"C:\Users\Misael\Documents\Estudos\Assistente_Transportadora\Relatorios" + r"\\" + fileCategoriName
+        newSheetFolder_Dir = r"C:\Users\Misael\Documents\Estudos\Sistema-E-log\Relatorios" + r"\\" + fileCategoriName
     
     newSheetName = str(Path(sheet_Dir).stem) + fileCategoriName + suffixType
 
@@ -23,7 +23,7 @@ def StandardFormat(Cliente,sheet_Dir,newSheetFolder_Dir = None):
     if Path.exists(Path(newSheet_Dir)):
        Path(newSheet_Dir).unlink()
     #-------------------------------------------------------------------------------------------------------------
-    configSheet = pd.read_excel(r"C:\Users\Misael\Documents\Estudos\Assistente_Transportadora\Config\config.xlsx", sheet_name='Columns')
+    configSheet = pd.read_excel(r"C:\Users\Misael\Documents\Estudos\Sistema-E-log\Config\config.xlsx", sheet_name='Columns')
     clientLine = configSheet.loc[configSheet['CLIENTE'] == Cliente].values.tolist()
     standardLine = configSheet.columns.to_list()
     #-------------------------------------------------------------------------------------------------------------

@@ -3,13 +3,19 @@ import pyautogui
 import time
 from pathlib import Path
 from detectResolution import detectResolution
+import requests
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import pyperclip
+
 
 pyautogui.PAUSE = 0.4
 resolution = detectResolution()
+dir =  Path(__file__).resolve().parent
 ics_link = "https://ics.totalexpress.com.br/index.php"
+operacoesCAF_link = "https://ics.totalexpress.com.br/agentes/caf.php"
+buscaPorLote_link = "https://ics.totalexpress.com.br/oper/relat_ultimostatus.php"
 baseICS = 'Gerencial'
-
-
 
 
 def loginICS():
@@ -74,14 +80,14 @@ def selectCheckBox():
     pyautogui.press('pgup')
     maxLoops = 6
     loops = 0
-    desmarcarTudo_LOTE_position = pyautogui.locateCenterOnScreen(f'images/{resolution}/desmarcar_BuscaPorLote.png', confidence=0.9)
+    desmarcarTudo_LOTE_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/desmarcar_BuscaPorLote.png', confidence=0.9)
     #---------------------------------------------------------------------------------------------------------
     if desmarcarTudo_LOTE_position == None:
         while desmarcarTudo_LOTE_position == None:
             loops = loops +1
             pyautogui.scroll(-200)
-            if pyautogui.locateCenterOnScreen(f'images/{resolution}/desmarcar_BuscaPorLote.png', confidence=0.9) != None:
-                desmarcarTudo_LOTE_position = pyautogui.locateCenterOnScreen(f'images/{resolution}/desmarcar_BuscaPorLote.png', confidence=0.9)
+            if pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/desmarcar_BuscaPorLote.png', confidence=0.9) != None:
+                desmarcarTudo_LOTE_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/desmarcar_BuscaPorLote.png', confidence=0.9)
                 pyautogui.click(desmarcarTudo_LOTE_position)
                 break
             if loops >= maxLoops:
@@ -90,7 +96,7 @@ def selectCheckBox():
     else:
         pyautogui.click(desmarcarTudo_LOTE_position)
     #----------------------------------------------------------------------------------------------------------
-    images_Dir = f"select_box\{resolution}"
+    images_Dir = f"{dir}/select_box/{resolution}"
     images_Path = Path(images_Dir)
     images_list = list(images_Path.glob("*"))
     #----------------------------------------------------------------------------------------------------------
@@ -101,7 +107,7 @@ def selectCheckBox():
     for image_Dir in images_list:
         maxLoops = 10
         loops = 0       
-        image_Rdir = f'select_box/{resolution}/{image_Dir.name}'
+        image_Rdir = f'{dir}/select_box/{resolution}/{image_Dir.name}'
         if pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.9) == None:
             if  upPage == False:
                 pyautogui.press('pgup')
@@ -122,23 +128,22 @@ def selectCheckBox():
             
        
 def extractCafs():
-    pyautogui.press('pgup')
-    operacoesButton_img_dir = f'select_box/{resolution}/operacoesGuiaButton_ICS.png'
-    cafButton_img_dir = f'select_box/{resolution}/cafGuiaButton_ICS.png.png' 
-    #----------------------------------------------------------------------------------------------------
-    if pyautogui.locateCenterOnScreen(operacoesButton_img_dir, confidence=0.9) == None:
-        print("----------> Error on localize operacoesButton")
-        exit
-    else:
-        operacoesButton_position = pyautogui.locateCenterOnScreen(operacoesButton_img_dir, confidence=0.9)
-        pyautogui.moveTo(operacoesButton_position)
-        #----------------------------------------------------------------------------------------------------
-        if pyautogui.locateCenterOnScreen(cafButton_img_dir, confidence=0.9) == None:
-            print("----------> Error on localize cafButton_img_dir")
-            exit
-        else:
-            cafButton_podition = pyautogui.locateCenterOnScreen(cafButton_img_dir, confidence=0.9)
-            pyautogui.click(cafButton_podition)
-        #----------------------------------------------------------------------------------------------------    
+    browserTooBar_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/navegador_ToolBar.png', confidence=0.8)
+    pyautogui.click(browserTooBar_position)
+    #-------------------------------------------------------------------------------------------------------------------------------
+    pyautogui.hotkey('alt','d')
+    pyautogui.write(operacoesCAF_link)
+    pyautogui.press('enter')
+    #-------------------------------------------------------------------------------------------------------------------------------
+    pyautogui.hotkey('ctrl','u')
+    time.sleep(3)
+    pyautogui.hotkey('ctrl','a')
+    pyautogui.hotkey('ctrl','c')
+    pyautogui.hotkey('ctrl','w')
+    html = pyperclip.paste()
+    table_soup = BeautifulSoup(html,'html.parser').find_all('table',{'id':'tabela'})
+    print(len(table_soup))
 
+    
+selectCheckBox()
 

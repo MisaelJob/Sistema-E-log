@@ -8,7 +8,7 @@ def DateFilter(dataFrame, columnsName, start = None, end = None):
     dataFrame = ToDate(dataFrame,columnsName)
     dataFrame = dataFrame.reset_index()
 
-    configSheet = pd.read_excel(r"C:\Users\Misael\Documents\Estudos\Assistente_Transportadora\Config\config.xlsx", sheet_name='Date')
+    configSheet = pd.read_excel(r"C:\Users\Misael\Documents\Estudos\Sistema-E-log\Config\config.xlsx", sheet_name='Date')
 
     if start == None and end == None:
         start = ToDate(configSheet.loc[0, 'start'])
