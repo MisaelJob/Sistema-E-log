@@ -4,6 +4,10 @@ from pandas import Timestamp
 from pathlib import Path
 
 
+thisArchive_dir = Path().absolute()
+caracters_dir = str(thisArchive_dir).find("Sistema-E-log") + 13
+rootFolder_dir = str(thisArchive_dir)[0:caracters_dir]
+    
 #extrair informações dos relatorios secundarios
 #colocar em formato padrão
 #juntar relatorios baixados
@@ -12,9 +16,12 @@ from pathlib import Path
 
 #@@CRIANDO RELATORIO GERAL (TRATADO)--------------------------------------
 def UnitedReport():
-    teste = Path().absolute
+    thisArchive_dir = Path().absolute()
+    caracters_dir = str(thisArchive_dir).find("Sistema-E-log") + 13
+    rootFolder_dir = str(thisArchive_dir)[0:caracters_dir]
     
-    print(teste)
+    
+    print(thisArchive_dir)
 UnitedReport()
 
 
