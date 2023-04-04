@@ -16,12 +16,8 @@ rootFolder_dir = str(thisArchive_dir)[0:caracters_dir]
 
 #@@CRIANDO RELATORIO GERAL (TRATADO)--------------------------------------
 def UnitedReport():
-    thisArchive_dir = Path().absolute()
-    caracters_dir = str(thisArchive_dir).find("Sistema-E-log") + 13
-    rootFolder_dir = str(thisArchive_dir)[0:caracters_dir]
-    
-    
-    print(thisArchive_dir)
+    import sys
+    print(sys.version)
 UnitedReport()
 
 

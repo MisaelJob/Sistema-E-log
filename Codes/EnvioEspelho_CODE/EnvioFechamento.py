@@ -1,20 +1,18 @@
 import pyautogui
 import pyperclip
-import win32com.client
 import pandas as pd
 import time
 from pathlib import Path
 import CreatedTools
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
 
-
-#PERMITIR QUE CODIGO TENHA POSSIBILIDADE DE ESCOLHER ENVIO DE MSG ARQUIVO E ESPELHO
-def DefinirInfos_EnvioEspelho(msg):
+def EnvioMensagem_wtt(msg,arquivo="ESPELHO"):
     #----------------------------------------------------
-    tabelaDeEnvio_dir = r"C:\Users\Misael\Documents\Estudos\Sistema-E-log\Relatorios\ENVIOS 1Q0323.xlsx"
+    rt = CreatedTools.rootFolder_dir
+    tabelaDeEnvio_dir = f"{rt}\Relatorios\ENVIOS 1Q0323.xlsx"
     tabelaDeEnvio_dt = pd.read_excel(tabelaDeEnvio_dir)
+    pyautogui.PAUSE = 1
+    maxErrors = 10
+    errorsCount = 0
     #----------------------------------------------------
     nomeEspelho_tabEnvio = ""
     nomeContato_tabEnvio = ""
@@ -22,8 +20,6 @@ def DefinirInfos_EnvioEspelho(msg):
     base_tabelaDeEnvio = ""
     tipoPagamento_tabEnvio = ""
     status_tabEnvio = ""
-    #----------------------------------------------------
-    nomeContato_wtt = ""
     #----------------------------------------------------
     for index in range(0,len(tabelaDeEnvio_dt)):
         nomeEspelho_tabEnvio = tabelaDeEnvio_dt.loc[index,'ESPELHO']
@@ -33,63 +29,107 @@ def DefinirInfos_EnvioEspelho(msg):
         tipoPagamento_tabEnvio = tabelaDeEnvio_dt.loc[index,'TIPO']
         status_tabEnvio = tabelaDeEnvio_dt.loc[index,'STATUS']
         #----------------------------------------------------
-        if status_tabEnvio.find("#") == -1:
-            CreatedTools.FindImage('limparPesquisa_wtt.png')
-            pyautogui.press('esc')
-            if not CreatedTools.FindImage('pesquisaVazia_wtt.png'):
-                if not CreatedTools.FindImage('pesquisaLimpa_wtt.png'):
-                    print("---------->DefinirInfos_EnvioEspelho() Erro ao localizar barra de pesquisa do WhatsApp!")
-                    continue
-            #----------------------------------------------------
-            pyautogui.write(nomeContato_tabEnvio)
-            pyautogui.press('enter')
-            CreatedTools.FindImage('limparPesquisa_wtt.png')
-            #----------------------------------------------------
-            if not CreatedTools.FindImage('opcoesPerfil_wtt.png'):
+        try:
+            if status_tabEnvio.find("#") != -1:
                 continue
-            if not CreatedTools.FindImage('dadosDoContato_wtt.png'):
-                if not CreatedTools.FindImage('dadosDoContato_2_wtt.png'):
-                    continue
-            #----------------------------------------------------
-            pyautogui.moveRel(-50, 230, duration=0.25)
-            pyautogui.click(clicks=3)
-            pyautogui.hotkey('ctrl','c')
-            nomeContato_wtt = pyperclip.paste()
-            #----------------------------------------------------
-            if nomeContato_wtt == nomeContato_tabEnvio or CreatedTools.cttName(nomeContato_wtt) == nomeContato_tabEnvio or nomeContato_wtt == telefone_tabEnvio:
-                if not CreatedTools.FindImage('fecharPerfil_wtt.png'):
-                    continue
-                #----------------------------------------------------
-                if not CreatedTools.funcionVBA('selecionarEspelho', nomeEspelho_tabEnvio, tipoPagamento_tabEnvio):
-                    continue
-                time.sleep(4)
-                #----------------------------------------------------
-                if not CreatedTools.FindImage('iconesChat_wtt.png'):
-                    continue
-                pyautogui.moveRel(100, 0, duration=0.25)
-                pyautogui.click()
-                pyautogui.hotkey('ctrl','v')
-                #----------------------------------------------------
-                mesagemDeEnvio = f"Olá {nomeContato_tabEnvio}.\n" + msg
-                pyautogui.write(mesagemDeEnvio)
-                #pyautogui.press('enter')
-                #----------------------------------------------------
-                tabelaDeEnvio_dt.loc[index,'STATUS'] = "#ENVIADO"
-                #----------------------------------------------------  
-            else:
+        except:
+            status_tabEnvio = ""
+        #----------------------------------------------------  
+        if not CreatedTools.ProcurarContato_wtt(nomeContato_tabEnvio):
+            if not CreatedTools.ProcurarContato_wtt(telefone_tabEnvio):
+                tabelaDeEnvio_dt.loc[index,'STATUS'] = "NÃO ENCONTRADO"
+                tabelaDeEnvio_dt.to_excel(tabelaDeEnvio_dir,index=False)
                 continue
-                #se não voltar ao inicio e tentar pesquisar telefone
-                        #se não
-                            #listar como não enviado
+        #----------------------------------------------------
+        if arquivo == "ESPELHO":
+            if not CreatedTools.funcionVBA('selecionarEspelho', nomeEspelho_tabEnvio, tipoPagamento_tabEnvio):
+                #-----ERROR-------------------
+                errorsCount = errorsCount + 1
+                if errorsCount >= maxErrors:
+                    break
+                continue
+                #-----------------------------
+            time.sleep(4)
+            if not CreatedTools.FindImage('iconesChat_wtt.png'):
+                #-----ERROR-------------------
+                errorsCount = errorsCount + 1
+                if errorsCount >= maxErrors:
+                    break
+                continue
+                #-----------------------------
+            pyautogui.moveRel(100, 0, duration=0.25)
+            pyautogui.click()
+            pyautogui.hotkey('ctrl','v')
+            #----------------------------------------------------
         else:
-            tabelaDeEnvio_dt.loc[index,'STATUS'] = "NÃO ENVIADO"
-        #dar respota sobre o envio no grupo de fechamento
+            if not CreatedTools.FindImage('chatAnexar_wtt.png'):
+               #-----ERROR-------------------
+                errorsCount = errorsCount + 1
+                if errorsCount >= maxErrors:
+                    break
+                continue
+                #-----------------------------
+            if not CreatedTools.FindImage('anexarArquivo_wtt.png'):
+                #-----ERROR-------------------
+                errorsCount = errorsCount + 1
+                if errorsCount >= maxErrors:
+                    break
+                continue
+                #-----------------------------
+            pyperclip.copy(arquivo)
+            pyautogui.hotkey("ctrl","v")
+            pyautogui.press('enter')
+        #----------------------------------------------------
+        mesagemDeEnvio = f"Olá {nomeContato_tabEnvio}.\n" + msg
+        pyperclip.copy(mesagemDeEnvio)
+        pyautogui.hotkey('ctrl','v')
+        pyautogui.press('enter')
+        #----------------------------------------------------
+        tabelaDeEnvio_dt.loc[index,'STATUS'] = "#ENVIADO"
+        tabelaDeEnvio_dt.to_excel(tabelaDeEnvio_dir,index=False)
+    #----------------------------------------------------
+    resultadoEnvios = tabelaDeEnvio_dt['STATUS'].value_counts()
+    resultadoMensagem = f"🤖*MISATRON*\n\nEnvios do {arquivo} foi finalizado, resultado:\n\nErros       {errorsCount}\n{resultadoEnvios}"
+    #----------------------------------------------------
+    print(resultadoMensagem)
+    CreatedTools.ProcurarContato_wtt("Equipe Financeiro")
+    pyautogui.press('enter')
+    pyperclip.copy(resultadoMensagem)
+    pyautogui.hotkey('ctrl','v')
+    pyautogui.press('enter')
+    #----------------------------------------------------
+
+
+
+EnvioMensagem_wtt("Aviso sobre data de pagamento da segunda quinzena de fevereiro!","Comunicação Parceiros.pdf")
 
 
 
 
-#time.sleep(3)
-#print(pyautogui.position())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
