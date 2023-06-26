@@ -8,7 +8,7 @@ import CreatedTools
 def EnvioMensagem_wtt(msg,arquivo="ESPELHO"):
     #----------------------------------------------------
     rt = CreatedTools.rootFolder_dir
-    tabelaDeEnvio_dir = f"{rt}\Relatorios\ENVIOS 1Q0323.xlsx"
+    tabelaDeEnvio_dir = f"{rt}\Relatorios\ENVIO.xlsx"
     tabelaDeEnvio_dt = pd.read_excel(tabelaDeEnvio_dir)
     pyautogui.PAUSE = 1
     maxErrors = 10
@@ -23,7 +23,7 @@ def EnvioMensagem_wtt(msg,arquivo="ESPELHO"):
     #----------------------------------------------------
     for index in range(0,len(tabelaDeEnvio_dt)):
         nomeEspelho_tabEnvio = tabelaDeEnvio_dt.loc[index,'ESPELHO']
-        nomeContato_tabEnvio = tabelaDeEnvio_dt.loc[index,'CONTATO']
+        nomeContato_tabEnvio = tabelaDeEnvio_dt.loc[index,'ENVIO PARA']
         telefone_tabEnvio = tabelaDeEnvio_dt.loc[index,'TEL']
         base_tabEnvio = tabelaDeEnvio_dt.loc[index,'BASE']
         tipoPagamento_tabEnvio = tabelaDeEnvio_dt.loc[index,'TIPO']
@@ -101,7 +101,8 @@ def EnvioMensagem_wtt(msg,arquivo="ESPELHO"):
 
 
 
-EnvioMensagem_wtt("Aviso sobre data de pagamento da segunda quinzena de fevereiro!","Comunicação Parceiros.pdf")
+EnvioMensagem_wtt("Segue ESPELHO da segunda quinzena de MARÇO","ESPELHO")
+
 
 
 

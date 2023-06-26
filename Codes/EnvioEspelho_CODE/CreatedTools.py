@@ -72,7 +72,7 @@ def cttName(name):
 
 
 def toTelephoneNum(text):
-    tel = text
+    tel = str(text)
     tellDD = ""
     tel8 =  ""
     telRe = re.findall(r'[0-9]*', tel)
@@ -99,7 +99,8 @@ def ProcurarContato_wtt(pesquisa):
         if not FindImage('pesquisaLimpa_wtt.png'):
             return False
     #----------------------------------------------------
-    pyautogui.write(pesquisa)
+    pyperclip.copy(pesquisa)
+    pyautogui.hotkey('ctrl','v')
     pyautogui.press('enter')
     FindImage('limparPesquisa_wtt.png')
     #----------------------------------------------------

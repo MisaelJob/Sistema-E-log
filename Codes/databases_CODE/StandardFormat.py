@@ -45,3 +45,5 @@ def StandardFormat(Cliente,sheet_Dir,newSheetFolder_Dir = None):
     print("---- StandardFormat finalizado com sucesso!")
     return newSheetFolder_Dir
     
+dire = r"C:\Users\Misael\Documents\Estudos\Sistema-E-log\Relatorios\\"
+StandardFormat("TOTAL EXPREESS",dire+"total express.xlsx")

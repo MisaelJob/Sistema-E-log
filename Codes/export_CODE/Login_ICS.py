@@ -86,8 +86,8 @@ def selectCheckBox():
         while desmarcarTudo_LOTE_position == None:
             loops = loops +1
             pyautogui.scroll(-200)
-            if pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/desmarcar_BuscaPorLote.png', confidence=0.9) != None:
-                desmarcarTudo_LOTE_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/desmarcar_BuscaPorLote.png', confidence=0.9)
+            if pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/desmarcar_BuscaPorLote.png', confidence=0.8) != None:
+                desmarcarTudo_LOTE_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/desmarcar_BuscaPorLote.png', confidence=0.8)
                 pyautogui.click(desmarcarTudo_LOTE_position)
                 break
             if loops >= maxLoops:
@@ -108,22 +108,22 @@ def selectCheckBox():
         maxLoops = 10
         loops = 0       
         image_Rdir = f'{dir}/select_box/{resolution}/{image_Dir.name}'
-        if pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.9) == None:
+        if pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.8) == None:
             if  upPage == False:
                 pyautogui.press('pgup')
                 upPage = True
-            while pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.9) == None:
+            while pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.8) == None:
                 loops = loops +1
                 pyautogui.scroll(-400)
-                if pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.9) != None:
-                    selectBox_position = pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.9)
+                if pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.8) != None:
+                    selectBox_position = pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.8)
                     pyautogui.click(selectBox_position)
                     break
                 if loops >= maxLoops:
                     print("----------> Error on localize checkBox!")
                     exit
         else:
-            selectBox_position = pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.9)
+            selectBox_position = pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.8)
             pyautogui.click(selectBox_position)
             
        
