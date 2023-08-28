@@ -102,7 +102,16 @@ def EnvioMensagem_wtt(msg,arquivo="ESPELHO"):
 
 
 EnvioMensagem_wtt("Segue ESPELHO da segunda quinzena de MARÇO","ESPELHO")
+<<<<<<< Updated upstream
 #teste de comit
+=======
+
+
+
+
+
+
+>>>>>>> Stashed changes
 
 
 
