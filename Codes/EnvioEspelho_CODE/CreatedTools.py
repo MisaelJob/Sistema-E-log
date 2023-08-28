@@ -6,13 +6,14 @@ import time
 import win32com.client
 import re
 import pyperclip
+import requests
 
 def DetectResolution():
     root = Tk()
     Xwidht = root.winfo_screenwidth()
     Yhight = root.winfo_screenheight()
     nowResolution = f"{Xwidht}x{Yhight}"
-    print(f'----------> Resulução de tela {nowResolution},localizada.')
+    #print(f'----------> Resulução de tela {nowResolution},localizada.')
     return nowResolution
 resolution = DetectResolution()
 
@@ -21,27 +22,30 @@ def RootFolder():
     thisArchive_dir = Path().absolute()
     caracters_dir = str(thisArchive_dir).find("Sistema-E-log") + 13
     nowRootFolder_dir = str(thisArchive_dir)[0:caracters_dir]
-    print(f'----------> Pasta raiz definida: {nowRootFolder_dir}.')
+    #print(f'----------> Pasta raiz definida: {nowRootFolder_dir}.')
     return nowRootFolder_dir
 rootFolder_dir = RootFolder()
 
 
-def FindImage(imageName, action="click",attempts=4,imageFolder="Codes/EnvioEspelho_CODE/images"):
+def FindImage(imageName,posX = 0,posY = 0,action="click",attempts=4,imageFolder="Codes/EnvioEspelho_CODE/images"):
     returnValue = False
     for attempt in range(1, attempts+1, 1):
         time.sleep(1)
         try:
-            pesquisa_wtt_pos = pyautogui.locateCenterOnScreen(f"{rootFolder_dir}/{imageFolder}/{resolution}/{imageName}", confidence=0.9)
+            pesquisa_wtt_posX, pesquisa_wtt_posY = pyautogui.locateCenterOnScreen(f"{rootFolder_dir}/{imageFolder}/{resolution}/{imageName}", confidence=0.9)
         except: 
             break
         #---------------------------------------------------------------------------------
-        if pesquisa_wtt_pos != None:
+        pesquisa_wtt_posX = pesquisa_wtt_posX + posX
+        pesquisa_wtt_posY = pesquisa_wtt_posY + posY
+        
+        if pesquisa_wtt_posX != None:
             if action == "click":
-                pyautogui.click(pesquisa_wtt_pos)
+                pyautogui.click(pesquisa_wtt_posX,pesquisa_wtt_posY)
                 returnValue = True
                 break
             elif action == "moveTo":
-                pyautogui.moveTo(pesquisa_wtt_pos)
+                pyautogui.moveTo(pesquisa_wtt_posX,pesquisa_wtt_posY)
                 returnValue = True
                 break
             else:
@@ -49,16 +53,21 @@ def FindImage(imageName, action="click",attempts=4,imageFolder="Codes/EnvioEspel
         elif attempt == attempts:
             break
         #--------------------------------------------------------------------------------- 
-    print(f'----------> Imagem {imageName}, localizada.')
+    if returnValue:
+        #print(f'----------> Imagem {imageName}, encontrada com sucesso.')
+        pass
+    else:
+        print(f'----------> Imagem {imageName}, não encontrada.')
+        pass
     return returnValue
 
 
 def funcionVBA(*args):
    excelApp = win32com.client.Dispatch("Excel.Application")
    excelWorkbook = excelApp.ActiveWorkbook
-   result = excelWorkbook.Application.Run(*args)
-   print(f'----------> Função VBA {args[0]} chamada.')
-   return result
+   resultado = excelWorkbook.Application.Run(*args)
+   #print(f'----------> Função VBA {args[0]} chamada.')
+   return resultado
   
 
 def cttName(name):
@@ -67,7 +76,8 @@ def cttName(name):
     correctName = correctName.upper()
     sobrenomes = correctName.split()
     novo_nome = ' '.join(sobrenomes[:-1])
-    print(f'----------> Valor: {name}, tratado para: {novo_nome}')
+    novo_nome = novo_nome.strip()
+    #print(f'----------> Valor: {name}, tratado para: {novo_nome}')
     return novo_nome
 
 
@@ -78,63 +88,158 @@ def toTelephoneNum(text):
     telRe = re.findall(r'[0-9]*', tel)
     telRe = ''.join(telRe)
     #----------------------------------------------------
-    digTel = len(telRe)
-    if digTel >= 12:
-        tellDD = str(telRe[2])+str(telRe[3])
-    elif digTel >= 10:
-        tellDD = str(telRe[0])+str(telRe[1])
     tel8 = telRe[-8:]
     
-    formateTel = f"55{tellDD}{tel8}"
-    print(f'----------> Valor: {text}, tratado para: {formateTel}')
+    formateTel = f"{tel8}"
+    try:
+        formateTel = int(formateTel)
+    except:
+        formateTel = 0
+    #print(f'----------> Valor: {text}, tratado para: {formateTel}')
     return formateTel
     
     
-def ProcurarContato_wtt(pesquisa):
+def ProcurarContato_wtt(pesquisa,telefone=0):
+    #----------------------------------------------------
     FindImage('fecharPerfil_wtt.png')
-    FindImage('limparPesquisa_wtt.png')
     pyautogui.press('esc')
     #----------------------------------------------------
-    if not FindImage('pesquisaVazia_wtt.png'):
-        if not FindImage('pesquisaLimpa_wtt.png'):
-            return False
+    if not valido(pesquisa):
+        return False
     #----------------------------------------------------
     pyperclip.copy(pesquisa)
+    pyautogui.hotkey("ctrl","alt","/")
+    pyautogui.hotkey("ctrl","a")
     pyautogui.hotkey('ctrl','v')
     pyautogui.press('enter')
-    FindImage('limparPesquisa_wtt.png')
     #----------------------------------------------------
-    if not FindImage('opcoesPerfil_wtt.png'):
-        return False
+    pyautogui.hotkey("ctrl","alt","/")
+    pyautogui.hotkey("ctrl","a")
+    pyautogui.press('backspace')
+    #----------------------------------------------------
+    
+    
+    
+    if not FindImage('opcoesPerfil_wtt.png',20):
+        pass
+    #----------------------------------------------------
     if not FindImage('dadosDoContato_wtt.png'):
         if not FindImage('dadosDoContato_2_wtt.png'):
             if not FindImage('dadosDoContato_3_wtt.png'):
                 return False
     #----------------------------------------------------
-    pyautogui.moveRel(-50, 230, duration=0.25)
-    pyautogui.click(clicks=3)
-    pyautogui.hotkey('ctrl','c')
-    pesqContato_wtt = pyperclip.paste()
+    
+    tentativaNomeContato = range(0,1,2)
+    for tentantivaContador in tentativaNomeContato:
+        print(tentantivaContador)
+        #-----------------------------------------------------------------------------------
+        if FindImage('contaOficialPerfil.png'):
+            pyautogui.scroll(-2000)
+            time.sleep(1)
+            #-----------------------------------------------------------------------------------
+            if tentantivaContador == 0:
+                pyautogui.moveRel(-50, 100, duration=0.5)
+            #-----------------------------------------------------------------------------------
+            elif tentantivaContador == 1:
+                pyautogui.moveRel(-50, 225, duration=0.5)
+            else:
+                return False 
+        #-----------------------------------------------------------------------------------
+        else:
+            if tentantivaContador == 0:
+                pyautogui.moveRel(-50, 233, duration=0.5)
+            elif tentantivaContador == 1:
+                pyautogui.moveRel(-50, 260, duration=0.5)
+            elif tentantivaContador == 1:
+                pyautogui.moveRel(-50, 282, duration=0.5)
+        #-----------------------------------------------------------------------------------
+        pyperclip.copy("")
+        pesqContato_wtt = ""
+        #-----------------------------------------------------------------------------------
+        pyautogui.click(clicks=3)
+        pyautogui.hotkey('ctrl','c')
+        pesqContato_wtt = pyperclip.paste()
+        #-----------------------------------------------------------------------------------
+        if not FindImage('fecharPerfil_wtt.png'):
+                pyautogui.press("esc") 
+        #-----------------------------------------------------------------------------------
+        
+
+        if pesqContato_wtt == pesquisa:
+            return True
+        elif cttName(pesqContato_wtt) == pesquisa:
+            return True
+        else:
+            #print(f"nome:{pesquisa} wtt:{pesqContato_wtt}")
+            pass
+
+    
+        if valido(toTelephoneNum(pesqContato_wtt)) and valido(toTelephoneNum(telefone)):
+            if toTelephoneNum(pesqContato_wtt) == toTelephoneNum(telefone):
+                return True
+        elif valido(toTelephoneNum(pesqContato_wtt)) and valido(toTelephoneNum(pesquisa)):   
+            if toTelephoneNum(pesqContato_wtt) == toTelephoneNum(pesquisa):
+                return True 
+        else:
+            #print(f"nome:{toTelephoneNum(pesquisa)} tel:{toTelephoneNum(telefone)} wtt:{toTelephoneNum(pesqContato_wtt)}")
+            pass
+
+
+    return False
+    #-----------------------------------------------------------------------------------
+    
+    
+ 
+    
+    
+def ArchiveType(arquivo):
+    arquivo = str(arquivo)
+    arquivo = arquivo.lower()
+    resposta = False
+    if  arquivo.find(".png") != -1:
+        resposta = "image"
+    elif arquivo.find(".jpeg") != -1:
+        resposta = "image"
+    elif arquivo.find(".jpg") != -1:
+        resposta = "image"
+    elif arquivo.find(".gif") != -1:
+        resposta = "image" 
+    elif arquivo.find(".tiff") != -1:
+        resposta = "image"
+    elif arquivo.find(".svg") != -1:
+        resposta = "image"
+    elif arquivo.find(".webp") != -1:
+        resposta = "image"
+    elif arquivo.find(".") != -1:
+        resposta = "archive"
+    elif arquivo.find("espelho") != -1 or arquivo.find("fechamento") != -1:
+        resposta = "espelho"
     #----------------------------------------------------
-    if not FindImage('fecharPerfil_wtt.png'):
-        return False
-    #----------------------------------------------------
-    if pesqContato_wtt == pesquisa:
-        contatoLocalizado = True
-    elif cttName(pesqContato_wtt) == pesquisa:
-        contatoLocalizado = True
-    elif toTelephoneNum(pesqContato_wtt) == toTelephoneNum(pesquisa):    
-        contatoLocalizado = True
+    if resposta:
+        #print(f'----------> Arquivo {arquivo}, encontrada com sucesso.')
+        pass
     else:
-        contatoLocalizado = False
-    #----------------------------------------------------
-    print(f'----------> Localização do cotato, {pesquisa}: {contatoLocalizado}')
-    return contatoLocalizado
-    #----------------------------------------------------
+        #print(f'----------> Arquivo {arquivo}, não encontrada.')
+        pass
+    #----------------------------------------------------   
+    return resposta
+        
 
-  
-    
-    
-    
+def MousePosition_X_Y():
+    time.sleep(2)
+    print(pyautogui.position())
+#MousePosition_X_Y()
 
 
+
+
+def valido(variavel):
+    if type(variavel) == int:
+        if variavel > 0:
+            return True
+    elif type(variavel) == str:
+        if len(variavel) > 0:
+            return True
+    #print(type(variavel))
+    return False
+    
