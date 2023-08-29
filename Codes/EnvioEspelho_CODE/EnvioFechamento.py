@@ -40,7 +40,7 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
         variavel_tabEnvio = tabelaDeEnvio_dt.loc[index,'VARIAVEL']
         somaDescontos_tabEnvio = tabelaDeEnvio_dt.loc[index,'Soma de Descontos']
         bonusNF_tabEnvio = tabelaDeEnvio_dt.loc[index,'BÔNUS NF']
-        totalEspelho_tabEnvio = tabelaDeEnvio_dt.loc[index,'TOTAL DO ESPELHO']
+        totalEspelho_tabEnvio = tabelaDeEnvio_dt.loc[index,'valor final REAL']
         chave_tabEnvio = tabelaDeEnvio_dt.loc[index,'#CHAVE']
         status_tabEnvio = tabelaDeEnvio_dt.loc[index,'STATUS']
         comentarios = True
@@ -119,7 +119,18 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
                         pyautogui.hotkey('ctrl','v')
                         time.sleep(0.5)
                         #-------------------------------------------------
-                        pyautogui.press('enter')   
+                        pyautogui.press('enter')
+                if totalEspelho_tabEnvio < 0:
+                    pyperclip.copy(f"⚠️Atenção seus pagamentos podem estar bloqueados por razão de seu espelho estar com valor negativo de {totalEspelho_tabEnvio}!")
+                    pyautogui.hotkey('ctrl','v')
+                    time.sleep(0.5)
+                    #-------------------------------------------------
+                    pyautogui.press('enter')   
+                
+            #-----------------------------------------------------------------------------------------------------------------------
+            if totalEspelho_tabEnvio <= 0:{
+                
+            }
         #************************************************************************************************************
         elif CreatedTools.ArchiveType(arquivo) == "arquivo":
             if not CreatedTools.FindImage('chatAnexar_wtt.png'):
@@ -243,10 +254,10 @@ def executarEm_hora_minuto(hora, minuto):
 
 
 def chamarFuncoesEnvio():
-    EnvioMensagem_wtt("Segue espelho 2Q JULHO, exclusivo das entregas *SEQUOIA* entregues de 16/07 a 31/07 em seu login. Espelhos das quinzenas de julho serão de envio e pagamento separados do fechamento convencional.","ESPELHO")
-    EnvioMensagem_wtt("Segue espelho 2Q JULHO, exclusivo das entregas *SEQUOIA* entregues de 16/07 a 31/07 em seu login. Espelhos das quinzenas de julho serão de envio e pagamento separados do fechamento convencional.","ESPELHO")
+    EnvioMensagem_wtt("Segue espelho da *PRIMEIRA* quinzena de *AGOSTO*","ESPELHO")
+    EnvioMensagem_wtt("Segue espelho da *PRIMEIRA* quinzena de *AGOSTO*","ESPELHO")
     
-    publicarResultados("sequoia","Equipe Financeiro")
+    publicarResultados("ESPELHO","Equipe Financeiro")
     
     #if executarEm_hora_minuto(18,15):      
     #    EnvioMensagem_wtt("Acesse este link para visualizar nosso catálogo no WhatsApp: https://wa.me/c/555191086827")    
@@ -254,6 +265,6 @@ def chamarFuncoesEnvio():
  
     
 chamarFuncoesEnvio()
-#arquivo atualizado
+
 
 
