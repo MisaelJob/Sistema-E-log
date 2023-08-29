@@ -9,7 +9,7 @@ from selenium.webdriver.common.keys import Keys
 import pyperclip
 
 
-pyautogui.PAUSE = 0.4
+pyautogui.PAUSE = 0.5
 resolution = detectResolution()
 dir =  Path(__file__).resolve().parent
 ics_link = "https://ics.totalexpress.com.br/index.php"
@@ -24,36 +24,49 @@ def loginICS():
     pyautogui.write('chrome')
     pyautogui.press('enter')
     #--------------------------------------------------------------------------------------------------------------------------
-    googleLoggin_position = pyautogui.locateCenterOnScreen(f'images/{resolution}/contaGoogleLoginNavegador.png', confidence=0.8)
-    if googleLoggin_position == None:
+    try:
+        googleLoggin_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/contaGoogleLoginNavegador.png', confidence=0.8)
+        if googleLoggin_position == None:
+            print("----------> Error on to localize Google accont!")
+            exit
+    except:
         print("----------> Error on to localize Google accont!")
-        exit
-    else:
-        pyautogui.click(googleLoggin_position)
-        pyautogui.hotkey('win','up')
-        pyautogui.write(ics_link)
-        pyautogui.press('enter')
-        #-----------------------------------------------------------------------------------------------------------
-        userICS_position = pyautogui.locateCenterOnScreen(f'images/{resolution}/selectUser_ICS.png', confidence=0.8)
+    pyautogui.click(googleLoggin_position)
+    pyautogui.hotkey('win','up')
+    pyautogui.write(ics_link)
+    pyautogui.press('enter')
+    #-----------------------------------------------------------------------------------------------------------
+    try:
+        userICS_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/selectUser_ICS.png', confidence=0.8)
         if userICS_position == None:
             print("----------> Error on to localize User ICS!")
             exit
-        else:   
-            pyautogui.click(userICS_position)
-            #-----------------------------------------------------------------------------------------------------------------------
-            nameUserIcs_position = pyautogui.locateCenterOnScreen(f'images/{resolution}/loginName_ICS_{baseICS}.png', confidence=0.8)
-            if nameUserIcs_position == None:
-                print("----------> Error on to localize Username " + baseICS)
-                exit
-            else:
-                pyautogui.click(nameUserIcs_position)
-                #----------------------------------------------------------------------------------------------------------------
-                loginEnterICS_position = pyautogui.locateCenterOnScreen(f'images/{resolution}/loginEnter_ICS.png', confidence=0.8)
-                if loginEnterICS_position == None:
-                    print("----------> Error on to localize button of enter login!")
-                    exit
-                else:
-                    pyautogui.click(loginEnterICS_position)
+    except:
+        print("----------> Error on to localize User ICS!")
+    pyautogui.click(userICS_position)
+    #-----------------------------------------------------------------------------------------------------------------------
+    try:
+        nameUserIcs_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/loginName_ICS_{baseICS}.png', confidence=0.8)
+        if nameUserIcs_position == None:
+            print("----------> Error on to localize Username " + baseICS)
+            exit
+    except:
+        print("----------> Error on to localize Username " + baseICS)
+    pyautogui.click(nameUserIcs_position)
+    #----------------------------------------------------------------------------------------------------------------
+    try:
+        loginEnterICS_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/loginEnter_ICS.png', confidence=0.8)
+        if loginEnterICS_position == None:
+            print("----------> Error on to localize button of enter login!")
+            exit
+    except:
+        print("----------> Error on to localize button of enter login!")
+    pyautogui.click(loginEnterICS_position)
+    #-----------------------------------------------------------------------------------------------------------
+    try:
+        nameUserIcs_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/loginName_ICS_{baseICS}.png', confidence=0.8)
+    except:
+        pass
 
 
 def guiaBuscaPorLote():
@@ -86,8 +99,8 @@ def selectCheckBox():
         while desmarcarTudo_LOTE_position == None:
             loops = loops +1
             pyautogui.scroll(-200)
-            if pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/desmarcar_BuscaPorLote.png', confidence=0.8) != None:
-                desmarcarTudo_LOTE_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/desmarcar_BuscaPorLote.png', confidence=0.8)
+            if pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/desmarcar_BuscaPorLote.png', confidence=0.9) != None:
+                desmarcarTudo_LOTE_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/desmarcar_BuscaPorLote.png', confidence=0.9)
                 pyautogui.click(desmarcarTudo_LOTE_position)
                 break
             if loops >= maxLoops:
@@ -108,22 +121,22 @@ def selectCheckBox():
         maxLoops = 10
         loops = 0       
         image_Rdir = f'{dir}/select_box/{resolution}/{image_Dir.name}'
-        if pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.8) == None:
+        if pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.9) == None:
             if  upPage == False:
                 pyautogui.press('pgup')
                 upPage = True
-            while pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.8) == None:
+            while pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.9) == None:
                 loops = loops +1
                 pyautogui.scroll(-400)
-                if pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.8) != None:
-                    selectBox_position = pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.8)
+                if pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.9) != None:
+                    selectBox_position = pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.9)
                     pyautogui.click(selectBox_position)
                     break
                 if loops >= maxLoops:
                     print("----------> Error on localize checkBox!")
                     exit
         else:
-            selectBox_position = pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.8)
+            selectBox_position = pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.9)
             pyautogui.click(selectBox_position)
             
        
@@ -145,5 +158,6 @@ def extractCafs():
     print(len(table_soup))
 
     
-selectCheckBox()
+#selectCheckBox()
 
+loginICS()
