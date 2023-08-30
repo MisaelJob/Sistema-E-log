@@ -11,6 +11,8 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import pyperclip
 from general_CODE import CreatedTools
+import pandas as pd
+
 
 pyautogui.PAUSE = 1
 resolution = detectResolution()
@@ -23,7 +25,7 @@ operacoesCAF_link = "https://ics.totalexpress.com.br/agentes/caf.php"
 buscaPorLote_link = "https://ics.totalexpress.com.br/oper/relat_ultimostatus.php"
 
 
-def loginICS(baseICS):
+def LoginICS(baseICS):
     pyautogui.hotkey('win','m')
     pyautogui.press('win')
     pyautogui.write('chrome')
@@ -31,46 +33,26 @@ def loginICS(baseICS):
     #--------------------------------------------------------------------------------------------
     if not CreatedTools.FindImage('contaGoogleLoginNavegador.png',0,0,"click",dirIMG):
         return    
+    pyperclip.copy(ics_link)
     pyautogui.hotkey('win','up')
-    pyautogui.write(ics_link)
+    pyautogui.hotkey('alt','d')
+    pyautogui.hotkey('ctrl','v')
     pyautogui.press('enter')
     #--------------------------------------------------------------------------------------------
-    if not CreatedTools.FindImage('selectUsers_ICS.png',0,0,"click",dirIMG):
+    if not CreatedTools.FindImage('selectUsers_ICS.png',0,0,"click",dirIMG,10):
         return
     #--------------------------------------------------------------------------------------------
     if not CreatedTools.FindImage(f'loginName_ICS_{baseICS}.png',0,0,"click",dirIMG):
-        return
+        if not CreatedTools.FindImage('rolagemListaLogins_ICS.png',0,0,"moveTo",dirIMG):
+            return
+        pyautogui.scroll(-200)
+        if not CreatedTools.FindImage(f'loginName_ICS_{baseICS}.png',0,0,"click",dirIMG):
+            return
+    pyautogui.press('enter')
     #--------------------------------------------------------------------------------------------
-    if not CreatedTools.FindImage('loginEnter_ICS.png',0,0,"click",dirIMG):
-        return
-    
-  
-loginICS("Gerencial")   
-        
-        
-    
 
 
-def guiaBuscaPorLote():
-    guiaRelatorios_position = pyautogui.locateCenterOnScreen(f'images/{resolution}/guiaRelatoriosButton_ICS.png', confidence=0.8)
-    if guiaRelatorios_position == None:
-        print("----------> Error on to localize Relatorios tab!")
-        exit
-    else:
-        pyautogui.moveTo(guiaRelatorios_position)
-        #-------------------------------------------------------------------------------------------------------------------------------
-        guiaBuscaPorLote_position = pyautogui.locateCenterOnScreen(f'images/{resolution}/buscaPorLoteGuiaButton_ICS.png', confidence=0.8)
-        if guiaBuscaPorLote_position == None:
-            print("----------> Error on to localize BuscaPorLote tab!")
-            exit
-        else:   
-            pyautogui.click(guiaBuscaPorLote_position)
-
-
-def selectCheckBox():
-    #pyautogui.moveTo(x=1,y=1)
-    #pyautogui.press('down', presses=4)
-    #pyautogui.press('enter')
+def SelectCheckBox():
     #---------------------------------------------------------------------------------------------------------
     pyautogui.press('pgup')
     maxLoops = 6
@@ -140,5 +122,30 @@ def extractCafs():
     print(len(table_soup))
 
     
-#selectCheckBox()
+def TabelarCafs(PAGINAS=4):
+    #Criar Planilha
+    df_cafs = pd.DataFrame()
+    
+    #Selecionar menu operações
+    
+    
+    #Selecionar sub menu CAf
+    #Selecionar botão EmAndamento/Encerrados
+    #Selecionar opção EmAndamento/Encerrados
+    #Selecionar campo caf
+    #Precionar enter
+    #Selecionar botaão paginas em 50 linhas
+    #Lopp
+        #Selecionar Tabela
+        #Adicionar Tabela a planilha
+        #Rolar página
+        #ir para proxima pagina
+    
+    
+    
+    
+    
+    pass
+    
+TabelarCafs()
 
