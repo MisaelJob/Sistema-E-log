@@ -7,6 +7,16 @@ import win32com.client
 import re
 import pyperclip
 import requests
+import os
+
+
+def RootFolder():
+    thisArchive_dir = os.path.abspath(os.path.dirname(__file__))
+    caracters_dir = thisArchive_dir.find("Sistema-E-log") + 13
+    nowRootFolder_dir = thisArchive_dir[0:caracters_dir]
+    return nowRootFolder_dir
+rootFolder_dir = RootFolder()
+print(f'Diretório raiz definido: {rootFolder_dir}.')
 
 
 def DetectResolution():
@@ -19,31 +29,32 @@ def DetectResolution():
 resolution = DetectResolution()
 
 
-def RootFolder():
-    thisArchive_dir = Path().absolute()
-    caracters_dir = str(thisArchive_dir).find("Sistema-E-log") + 13
-    nowRootFolder_dir = str(thisArchive_dir)[0:caracters_dir]
-    #print(f'----------> Pasta raiz definida: {nowRootFolder_dir}.')
-    return nowRootFolder_dir
-rootFolder_dir = RootFolder()
 
 
-def FindImage(imageName,posX = 0,posY = 0,action="click",imageFolder="{rootFolder_dir}/Codes/EnvioEspelho_CODE/images/{resolution}"):
-    imgVariacao = ["",1,2,3,4,5]
+def FindImage(imageName,posX = 0,posY = 0,action="click",imageFolder=f"{rootFolder_dir}\\Codes\\EnvioEspelho_CODE\\images\\{resolution}"):
+    imgVariacao = ['','1','2','3','4','5']
     returnValue = False
+    pesquisa_wtt_posX = None
+    pesquisa_wtt_posY = None
     
     for variacao in imgVariacao:
         for tentativa in range(1,5):
             time.sleep(1)
+            dirIMG = f"{imageFolder}\\{imageName}"
+            particaoDoTexto = dirIMG.split(".")
+            dirIMG = particaoDoTexto[0] + variacao + "." + particaoDoTexto[1]
+            
             try:
-                pesquisa_wtt_posX, pesquisa_wtt_posY = pyautogui.locateCenterOnScreen(f"{imageFolder}/{imageName}{variacao}", confidence=0.9)
+                pesquisa_wtt_posX, pesquisa_wtt_posY = pyautogui.locateCenterOnScreen(dirIMG, confidence=0.9)
             except: 
-                break
+                continue
             #---------------------------------------------------------------------------------
             if pesquisa_wtt_posX != None:
                 pesquisa_wtt_posX = pesquisa_wtt_posX + posX
                 pesquisa_wtt_posY = pesquisa_wtt_posY + posY
                 break
+        if pesquisa_wtt_posX != None:
+            break
     #---------------------------------------------------------------------------------
     if pesquisa_wtt_posX != None:
         if action == "click":
@@ -55,12 +66,9 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",imageFolder="{rootFolde
         elif action == "position":
             returnValue = [pesquisa_wtt_posX, pesquisa_wtt_posY]
     #---------------------------------------------------------------------------------
-    if returnValue:
-        #print(f'----------> Imagem {imageName}, encontrada com sucesso.')
-        pass
-    else:
+    if not returnValue:
         print(f'----------> Imagem {imageName}, não encontrada.')
-        pass
+        
     
     
     
@@ -241,5 +249,5 @@ def valido(variavel):
             return True
     #print(type(variavel))
     return False
-    
-FindImage('contaGoogleLoginNavegador.png')
+
+FindImage("contaGoogleLoginNavegador.png")

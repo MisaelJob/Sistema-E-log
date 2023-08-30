@@ -15,7 +15,8 @@ from general_CODE import CreatedTools
 pyautogui.PAUSE = 1
 resolution = detectResolution()
 dir =  Path(__file__).resolve().parent
-
+#imagesDir = dir + "/image"
+dirIMG = f'{dir}\\images\\{resolution}'
 
 ics_link = "https://ics.totalexpress.com.br/index.php"
 operacoesCAF_link = "https://ics.totalexpress.com.br/agentes/caf.php"
@@ -27,53 +28,24 @@ def loginICS(baseICS):
     pyautogui.press('win')
     pyautogui.write('chrome')
     pyautogui.press('enter')
-    #--------------------------------------------------------------------------------------------------------------------------
-    try:
-        googleLoggin_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/contaGoogleLoginNavegador.png', confidence=0.8)
-        if googleLoggin_position == None:
-            print("----------> Error on to localize Google accont!")
-            exit
-    except:
-        print("----------> Error on to localize Google accont!")
-    pyautogui.click(googleLoggin_position)
+    #--------------------------------------------------------------------------------------------
+    if not CreatedTools.FindImage('contaGoogleLoginNavegador.png',0,0,"click",dirIMG):
+        return    
     pyautogui.hotkey('win','up')
     pyautogui.write(ics_link)
     pyautogui.press('enter')
-    #-----------------------------------------------------------------------------------------------------------
-    try:
-        userICS_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/selectUsers_ICS.png', confidence=0.8)
-        if userICS_position == None:
-            print("----------> Error on to localize User ICS!")
-            exit
-    except:
-        print("----------> Error on to localize User ICS!")
-    pyautogui.click(userICS_position)
-    #-----------------------------------------------------------------------------------------------------------------------
-    try:
-        nameUserIcs_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/loginName_ICS_{baseICS}.png', confidence=0.9)
-        if nameUserIcs_position == None:
-            print("----------> Error on to localize Username " + baseICS)
-            exit
-    except:
-        print("----------> Error on to localize Username " + baseICS)
-        exit
-    pyautogui.click(nameUserIcs_position)
-    #----------------------------------------------------------------------------------------------------------------
-    try:
-        loginEnterICS_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/loginEnter_ICS.png', confidence=0.8)
-        if loginEnterICS_position == None:
-            print("----------> Error on to localize button of enter login!")
-            exit
-    except:
-        print("----------> Error on to localize button of enter login!")
-    pyautogui.click(loginEnterICS_position)
-    #-----------------------------------------------------------------------------------------------------------
-    try:
-        pass
-    except:
-        pass
+    #--------------------------------------------------------------------------------------------
+    if not CreatedTools.FindImage('selectUsers_ICS.png',0,0,"click",dirIMG):
+        return
+    #--------------------------------------------------------------------------------------------
+    if not CreatedTools.FindImage(f'loginName_ICS_{baseICS}.png',0,0,"click",dirIMG):
+        return
+    #--------------------------------------------------------------------------------------------
+    if not CreatedTools.FindImage('loginEnter_ICS.png',0,0,"click",dirIMG):
+        return
     
-    
+  
+loginICS("Gerencial")   
         
         
     
@@ -169,4 +141,4 @@ def extractCafs():
 
     
 #selectCheckBox()
-loginICS("Gerencial")
+
