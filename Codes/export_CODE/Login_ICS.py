@@ -2,19 +2,17 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from bs4 import BeautifulSoup
+import requests
 import pyautogui
 import time
 from pathlib import Path
 from detectResolution import detectResolution
-import requests
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 import pyperclip
 from general_CODE import CreatedTools
 import pandas as pd
 
 
-pyautogui.PAUSE = 1
+pyautogui.PAUSE = 0.5
 resolution = detectResolution()
 dir =  Path(__file__).resolve().parent
 #imagesDir = dir + "/image"
@@ -104,48 +102,76 @@ def SelectCheckBox():
             pyautogui.click(selectBox_position)
             
        
-def extractCafs():
-    browserTooBar_position = pyautogui.locateCenterOnScreen(f'{dir}/images/{resolution}/navegador_ToolBar.png', confidence=0.8)
-    pyautogui.click(browserTooBar_position)
-    #-------------------------------------------------------------------------------------------------------------------------------
-    pyautogui.hotkey('alt','d')
-    pyautogui.write(operacoesCAF_link)
-    pyautogui.press('enter')
-    #-------------------------------------------------------------------------------------------------------------------------------
-    pyautogui.hotkey('ctrl','u')
-    time.sleep(3)
-    pyautogui.hotkey('ctrl','a')
-    pyautogui.hotkey('ctrl','c')
-    pyautogui.hotkey('ctrl','w')
-    html = pyperclip.paste()
-    table_soup = BeautifulSoup(html,'html.parser').find_all('table',{'id':'tabela'})
-    print(len(table_soup))
 
     
-def TabelarCafs(PAGINAS=4):
-    #Criar Planilha
-    df_cafs = pd.DataFrame()
+def TabelarCafs(PAGINAS=3, REPOSITORIO = "G:\Meu Drive\DRIVE MISAEL\REPOSITORIO EASY\RELATORIOS\ICS_cafs.xlsx",FILTROS=['selecionarEncerrados.png','selecioanarAndamento.png']):    
+    if os.path.isfile(REPOSITORIO):
+        df_cafs = pd.read_excel(REPOSITORIO)
+    else:
+        df_cafs = pd.DataFrame()
+    #--------------------------------------------------------------------------------------------------
     
-    #Selecionar menu operações
-    
-    
-    #Selecionar sub menu CAf
-    #Selecionar botão EmAndamento/Encerrados
-    #Selecionar opção EmAndamento/Encerrados
-    #Selecionar campo caf
-    #Precionar enter
-    #Selecionar botaão paginas em 50 linhas
-    #Lopp
-        #Selecionar Tabela
-        #Adicionar Tabela a planilha
-        #Rolar página
-        #ir para proxima pagina
-    
-    
-    
-    
-    
-    pass
-    
+    for filtro in FILTROS:
+        if not CreatedTools.FindImage('guiaCarregada_ICS.png',0,0,"click",dirIMG,10):
+            return
+        pyautogui.press('pageup')
+        #--------------------------------------------------------------------------------------------------
+        if not CreatedTools.FindImage('operacaoesGuiaButton_ICS.png',0,0,"click",dirIMG):
+            return
+        #--------------------------------------------------------------------------------------------------
+        if not CreatedTools.FindImage('subMenuCaf_ICS.png',0,0,"click",dirIMG):
+            return
+        if not CreatedTools.FindImage('guiaCarregada_ICS.png',0,0,"aguardar",dirIMG,10):
+            return
+        
+        
+        if not CreatedTools.FindImage('operacoesCAF\\filtroEncerradosAndamento.png',0,0,"click",dirIMG):
+            return
+        if not CreatedTools.FindImage(f'operacoesCAF\\{filtro}',0,0,"click",dirIMG):
+            return
+        #--------------------------------------------------------------------------------------------------
+        if not CreatedTools.FindImage('operacoesCAF\\campoCAF.png',0,0,"click",dirIMG):
+            return
+        pyautogui.press('enter')
+        if not CreatedTools.FindImage('guiaCarregada_ICS.png',0,0,"aguardar",dirIMG,10):
+            return
+        
+        
+        for pagina in range(2,PAGINAS+2):
+            #--------------------------------------------------------------------------------------------------
+            if not CreatedTools.FindImage('operacoesCAF\\pagina50linhas.png',0,0,"click",dirIMG):
+                return
+            if not CreatedTools.FindImage('guiaCarregada_ICS.png',0,0,"aguardar",dirIMG,10):
+                return
+            #--------------------------------------------------------------------------------------------------
+            pyautogui.hotkey('ctrl','u')
+            if not CreatedTools.FindImage('operacoesCAF\\viewCarregada.png',0,0,"aguardar",dirIMG,10):
+                return   
+            #--------------------------------------------------------------------------------------------------
+            pyautogui.hotkey('ctrl','a')
+            pyautogui.hotkey('ctrl','c')
+            pyautogui.hotkey('ctrl','w')
+            html_caf = pyperclip.paste()
+            soup = BeautifulSoup(html_caf, 'html.parser')
+            table = soup.find('table', {'id': 'tabela'})
+            if table is not None:
+                df_temp = pd.read_html(str(table))[0]
+                df_cafs = pd.concat([df_cafs, df_temp], ignore_index=True)
+                df_cafs = df_cafs.drop_duplicates(subset='C.A.F.', keep='last')
+                
+                df_cafs.to_excel(REPOSITORIO, index=False)
+            #--------------------------------------------------------------------------------------------------
+            if pagina < PAGINAS+1:
+                pyautogui.press('pagedown')
+                if not CreatedTools.FindImage('operacoesCAF\\irParaPagina.png',0,0,"click",dirIMG):
+                    return
+                pyperclip.copy(pagina)
+                pyautogui.hotkey('ctrl','v')
+                pyautogui.press('enter')
+                if CreatedTools.FindImage('alertaOK_ICS.png',0,0,"click",dirIMG):
+                    break 
+                if not CreatedTools.FindImage('guiaCarregada_ICS.png',0,0,"aguardar",dirIMG,10):
+                    return   
+        
 TabelarCafs()
 

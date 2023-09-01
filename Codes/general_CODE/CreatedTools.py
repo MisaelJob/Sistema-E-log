@@ -38,16 +38,21 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",imageFolder=f"{rootFold
     dirIMG = particaoDoTexto[0] + "*." + particaoDoTexto[1]
     #-------------------------------------------------------
     path_IMG = Path(imageFolder)
-    list_variacoesIMG = path_IMG.glob(dirIMG)
+    list_variacoesIMG = list(path_IMG.glob(dirIMG))
     #-------------------------------------------------------
     returnValue = False
     pesquisa_wtt_posX = None
     pesquisa_wtt_posY = None
     #-------------------------------------------------------
     for tentativa in range(0,aguardar):
+        print(tentativa)
+        time.sleep(1)
+        if pesquisa_wtt_posX is not None:
+            break
+        
         for variacao in list_variacoesIMG:
             dirVariacao = variacao.as_posix()
-            time.sleep(1)
+            print(tentativa,dirVariacao)
             #----------------------------------     
             try:
                 pesquisa_wtt_posX, pesquisa_wtt_posY = pyautogui.locateCenterOnScreen(dirVariacao, confidence=0.9)
@@ -57,9 +62,9 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",imageFolder=f"{rootFold
             if pesquisa_wtt_posX != None:
                 pesquisa_wtt_posX = pesquisa_wtt_posX + posX
                 pesquisa_wtt_posY = pesquisa_wtt_posY + posY
+                print("encontrou",pesquisa_wtt_posX)
                 break
-        if pesquisa_wtt_posX != None:
-            break
+        
     #---------------------------------------------------------------------------------
     if pesquisa_wtt_posX != None:
         if action == "click":
@@ -70,6 +75,8 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",imageFolder=f"{rootFold
             returnValue = True
         elif action == "position":
             returnValue = [pesquisa_wtt_posX, pesquisa_wtt_posY]
+        elif action == "aguardar":
+            returnValue = True
     #---------------------------------------------------------------------------------
     if not returnValue:
         print(f'----------> Imagem {imageName}, não encontrada.')
