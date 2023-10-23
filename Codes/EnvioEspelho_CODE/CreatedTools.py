@@ -108,12 +108,14 @@ def ProcurarContato_wtt(pesquisa,telefone=0):
         return False
     #----------------------------------------------------
     pyperclip.copy(pesquisa)
-    pyautogui.hotkey("ctrl","alt","/")
+    #pyautogui.hotkey("ctrl","alt","/")
+    pyautogui.click(824,169)
     pyautogui.hotkey("ctrl","a")
     pyautogui.hotkey('ctrl','v')
     pyautogui.press('enter')
     #----------------------------------------------------
-    pyautogui.hotkey("ctrl","alt","/")
+    #pyautogui.hotkey("ctrl","alt","/")
+    pyautogui.click(824,169)
     pyautogui.hotkey("ctrl","a")
     pyautogui.press('backspace')
     #----------------------------------------------------

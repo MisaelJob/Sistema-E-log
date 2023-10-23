@@ -16,10 +16,10 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
     rt = CreatedTools.rootFolder_dir
     tabelaDeEnvio_dir = f"{rt}\Relatorios\ENVIOS.xlsx"
     tabelaDeEnvio_dt = pd.read_excel(tabelaDeEnvio_dir)
-    pyautogui.PAUSE = 1
+    pyautogui.PAUSE = 0.6
     maxErrors = 10
     errorsCount = 0
-    #----------------------------------------------------
+    #----------------------/------------------------------
     nomeEspelho_tabEnvio = ""
     nomeContato_tabEnvio = ""
     telefone_tabEnvio = ""
@@ -50,7 +50,7 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
                 continue
         except:
             status_tabEnvio = ""
-        #---------------------------------------------------- 
+        #----------------------------------------------------
         if not CreatedTools.ProcurarContato_wtt(nomeContato_tabEnvio,telefone_tabEnvio):
             if not CreatedTools.ProcurarContato_wtt(telefone_tabEnvio,nomeContato_tabEnvio):
                 tabelaDeEnvio_dt.loc[index,'STATUS'] = "NÃO ENCONTRADO"
@@ -59,10 +59,10 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
                     print("----------> Contato não encontrado!")
                 continue
         #----------------------------------------------------
-        if arquivo == "TESTE":
+        if arquivo == "":
             pass
         #******************************************************************************************************************
-        if CreatedTools.ArchiveType(arquivo) == "espelho":
+        elif CreatedTools.ArchiveType(arquivo) == "espelho":
             try:
                 CreatedTools.funcionVBA('selecionarEspelho', nomeEspelho_tabEnvio, tipoPagamento_tabEnvio)
             except:
@@ -125,12 +125,7 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
                     pyautogui.hotkey('ctrl','v')
                     time.sleep(0.5)
                     #-------------------------------------------------
-                    pyautogui.press('enter')   
-                
-            #-----------------------------------------------------------------------------------------------------------------------
-            if totalEspelho_tabEnvio <= 0:{
-                
-            }
+                    pyautogui.press('enter')          
         #************************************************************************************************************
         elif CreatedTools.ArchiveType(arquivo) == "arquivo":
             if not CreatedTools.FindImage('chatAnexar_wtt.png'):
@@ -192,7 +187,9 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
             print(nomeEspelho_tabEnvio)
             pass
         else:
-            mensagemDeEnvio = f"Olá {nomeContato_tabEnvio}.\n" + mensagem 
+            CreatedTools.FindImage('iconesChat_wtt.png',100)
+            #----------------------------------------------------
+            mensagemDeEnvio = f"Olá {nomeContato_tabEnvio}?\n" + mensagem
             pyperclip.copy(mensagemDeEnvio)
             pyautogui.hotkey('ctrl','v')
             pyautogui.press('enter')
@@ -254,10 +251,10 @@ def executarEm_hora_minuto(hora, minuto):
 
 
 def chamarFuncoesEnvio():
-    EnvioMensagem_wtt("Segue espelho da *PRIMEIRA* quinzena de *AGOSTO*","ESPELHO")
-    EnvioMensagem_wtt("Segue espelho da *PRIMEIRA* quinzena de *AGOSTO*","ESPELHO")
-    
-    publicarResultados("ESPELHO","Equipe Financeiro")
+    mensagemPronta = "Estamos chegando!!!\n\nVocê quer aumentar sua renda?\n\nO agileGo, o novo app de entregas que vai proporcionar mais oportunidades de ganho para você, veja o diferencial:\n\n- Receber pedidos de estabelecimentos de forma rápida e fácil;\n- Mais entregas por rota;\n- Maior ganho financeiro;\n- Ter mais flexibilidade para escolher seus horários e regiões de entrega.\n\nSe você está procurando uma oportunidade de ganho que te dê mais autonomia e renda, cadastre-se no agileGo.\n\nEm breve faça o seu cadastro e seja um dos nossos parceiros.\n\nConfira nosso site: https://www.agilego.com.br/\n\nNos siga nas redes:\n\nInstagram: https://abreai.link/3v8tl\nFacebook: https://abreai.link/nyo8k\nLinkedin: https://abreai.link/yliup"
+
+    EnvioMensagem_wtt(mensagemPronta,"agileGO.jif")
+    EnvioMensagem_wtt(mensagemPronta,"agileGO.jif")
     
     #if executarEm_hora_minuto(18,15):      
     #    EnvioMensagem_wtt("Acesse este link para visualizar nosso catálogo no WhatsApp: https://wa.me/c/555191086827")    

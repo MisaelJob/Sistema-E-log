@@ -133,18 +133,17 @@ def ProcurarContato_wtt(pesquisa,telefone=0):
         return False
     #----------------------------------------------------
     pyperclip.copy(pesquisa)
-    pyautogui.hotkey("ctrl","alt","/")
+    #pyautogui.hotkey("ctrl","alt","/")
+    pyautogui.click(824,169)
     pyautogui.hotkey("ctrl","a")
     pyautogui.hotkey('ctrl','v')
     pyautogui.press('enter')
     #----------------------------------------------------
-    pyautogui.hotkey("ctrl","alt","/")
+    #pyautogui.hotkey("ctrl","alt","/")
+    pyautogui.click(824,169)
     pyautogui.hotkey("ctrl","a")
     pyautogui.press('backspace')
     #----------------------------------------------------
-    
-    
-    
     if not FindImage('opcoesPerfil_wtt.png',20):
         pass
     #----------------------------------------------------
@@ -153,7 +152,6 @@ def ProcurarContato_wtt(pesquisa,telefone=0):
             if not FindImage('dadosDoContato_3_wtt.png'):
                 return False
     #----------------------------------------------------
-    
     tentativaNomeContato = range(0,1,2)
     for tentantivaContador in tentativaNomeContato:
         print(tentantivaContador)
@@ -188,8 +186,6 @@ def ProcurarContato_wtt(pesquisa,telefone=0):
         if not FindImage('fecharPerfil_wtt.png'):
                 pyautogui.press("esc") 
         #-----------------------------------------------------------------------------------
-        
-
         if pesqContato_wtt == pesquisa:
             return True
         elif cttName(pesqContato_wtt) == pesquisa:
@@ -197,8 +193,7 @@ def ProcurarContato_wtt(pesquisa,telefone=0):
         else:
             #print(f"nome:{pesquisa} wtt:{pesqContato_wtt}")
             pass
-
-    
+        #-----------------------------------------------------------------------------------
         if valido(toTelephoneNum(pesqContato_wtt)) and valido(toTelephoneNum(telefone)):
             if toTelephoneNum(pesqContato_wtt) == toTelephoneNum(telefone):
                 return True
@@ -231,6 +226,8 @@ def ArchiveType(arquivo):
     elif arquivo.find(".svg") != -1:
         resposta = "image"
     elif arquivo.find(".webp") != -1:
+        resposta = "image"
+    elif arquivo.find(".jif") != -1:
         resposta = "image"
     elif arquivo.find(".") != -1:
         resposta = "archive"
