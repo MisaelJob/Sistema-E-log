@@ -182,6 +182,6 @@ def TabelarCafs(INICIO=1,PAGINAS=3, REPOSITORIO = "G:\Meu Drive\DRIVE MISAEL\REP
           
           
           
-    SelectCheckBox()     
+#SelectCheckBox()
 
-
+TabelarCafs(1,35)
