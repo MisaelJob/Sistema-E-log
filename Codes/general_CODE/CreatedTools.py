@@ -45,7 +45,6 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",imageFolder=f"{rootFold
     pesquisa_wtt_posY = None
     #-------------------------------------------------------
     for tentativa in range(0,aguardar):
-        print(tentativa)
         time.sleep(1)
         if pesquisa_wtt_posX is not None:
             break
@@ -62,7 +61,6 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",imageFolder=f"{rootFold
             if pesquisa_wtt_posX != None:
                 pesquisa_wtt_posX = pesquisa_wtt_posX + posX
                 pesquisa_wtt_posY = pesquisa_wtt_posY + posY
-                print("encontrou",pesquisa_wtt_posX)
                 break
         
     #---------------------------------------------------------------------------------
