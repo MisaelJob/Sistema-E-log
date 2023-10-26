@@ -34,7 +34,7 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",attempts=4,imageFolder=
         try:
             pesquisa_wtt_posX, pesquisa_wtt_posY = pyautogui.locateCenterOnScreen(f"{rootFolder_dir}/{imageFolder}/{resolution}/{imageName}", confidence=0.9)
         except: 
-            break
+            continue
         #---------------------------------------------------------------------------------
         pesquisa_wtt_posX = pesquisa_wtt_posX + posX
         pesquisa_wtt_posY = pesquisa_wtt_posY + posY
@@ -110,6 +110,8 @@ def ProcurarContato_wtt(pesquisa,telefone=0):
     #----------------------------------------------------
     metodosDeBusca = ["pesquisaWtt","linkDireto"]
     for metodoAtual in metodosDeBusca:
+        if returnContatoEncontrado == True:
+                break
         #------------------------------------------------
         if metodoAtual == "pesquisaWtt":
             #pyautogui.hotkey("ctrl","alt","/")
@@ -129,8 +131,10 @@ def ProcurarContato_wtt(pesquisa,telefone=0):
             #pyperclip.copy("https://web.whatsapp.com/send/?phone=" + toTelephoneNum(telefone))
             pyautogui.hotkey('ctrl','v')
             pyautogui.press('enter')
-            if not FindImage('inicioPagina_wtt.png',0,0,"click",200):
+            time.sleep(2)
+            if not FindImage('inicioPagina_wtt.png',attempts=200):
                 continue
+            time.sleep(2)
         #---------------------------------------------------------------------------------------------
         if not FindImage('opcoesPerfil_wtt.png',20):
             if not FindImage('opcoesPerfil2_wtt.png'):
@@ -141,15 +145,15 @@ def ProcurarContato_wtt(pesquisa,telefone=0):
                 if not FindImage('dadosDoContato_3_wtt.png'):
                     continue
         #----------------------------------------------------
-        tentativaValidadarNomeContato = range(0,2,1)
+        tentativaValidadarNomeContato = range(0,3,1)
         for tentantivaContador in tentativaValidadarNomeContato:
             if returnContatoEncontrado == True:
                 break
             #----------------------------------------------------
             if tentantivaContador == 0:
-                pyautogui.moveRel(-50, 233, duration=0.5)
+                pyautogui.moveRel(-50, 213, duration=0.5)
             elif tentantivaContador == 1:
-                pyautogui.moveRel(0, 30, duration=0.5)
+                pyautogui.moveRel(0, 20, duration=0.5)
             elif tentantivaContador == 2:
                 pyautogui.moveRel(0, 30, duration=0.5)
             #----------------------------------------------------
@@ -161,16 +165,16 @@ def ProcurarContato_wtt(pesquisa,telefone=0):
             pesqContato_wtt = pyperclip.paste()
             #-----------------------------------
             if pesqContato_wtt == pesquisa:
-                returnContatoEncontrado = True   
+                returnContatoEncontrado = True    
             elif cttName(pesqContato_wtt) == pesquisa:
                 returnContatoEncontrado = True 
             #-------------------------------------------------------------------------------
             if valido(toTelephoneNum(pesqContato_wtt)) and valido(toTelephoneNum(telefone)):
                 if toTelephoneNum(pesqContato_wtt) == toTelephoneNum(telefone):
-                    returnContatoEncontrado = True                    
+                    returnContatoEncontrado = True                                     
             elif valido(toTelephoneNum(pesqContato_wtt)) and valido(toTelephoneNum(pesquisa)):   
                 if toTelephoneNum(pesqContato_wtt) == toTelephoneNum(pesquisa):
-                    returnContatoEncontrado = True             
+                    returnContatoEncontrado = True                 
     #----------------------------------------------------------------------------------------
     if not FindImage('fecharPerfil_wtt.png'):
         pyautogui.press("esc") 
@@ -218,7 +222,7 @@ def ArchiveType(arquivo):
 def MousePosition_X_Y():
     time.sleep(2)
     print(pyautogui.position())
-#MousePosition_X_Y()
+MousePosition_X_Y()
 
 
 

@@ -212,7 +212,7 @@ def publicarResultados(arquivo,contato):
     tabelaDeEnvio_dt = pd.read_excel(tabelaDeEnvio_dir)
     
     resultadoEnvios = tabelaDeEnvio_dt['STATUS'].value_counts()
-    resultadoMensagem = f"🤖*MISATRON*2.1\n\nOlá {contato} o envido de *{arquivo}* foi finalizado, resultado:\n\nErros       {errorsCount}\n{resultadoEnvios}"
+    resultadoMensagem = f"🤖 *MISATRON 2.2* \n\nOlá {contato} o envido de *{arquivo}* foi finalizado, resultado:\n\nErros       {errorsCount}\n{resultadoEnvios} \n\n Tomem cuidado, estou sendo atualizado! 😎"
     #-----------------------------------------------------------------
     if CreatedTools.ProcurarContato_wtt(contato):
         pyperclip.copy(resultadoMensagem)
@@ -220,17 +220,17 @@ def publicarResultados(arquivo,contato):
         pyautogui.hotkey('ctrl','v')
         time.sleep(0.5)
         pyautogui.press('enter') 
-    #-----------------------------------------------------------------
-    if not CreatedTools.FindImage('chatAnexar_wtt.png'):
-       return
-    if not CreatedTools.FindImage('anexarArquivo_wtt.png'):
-        return
-    pyperclip.copy(tabelaDeEnvio_dir)
-    pyautogui.hotkey("ctrl","v")
-    if not CreatedTools.FindImage('abrirArquivo_wtt.png'):
-        pyautogui.press('esc')
-    pyautogui.press('enter')
-    pyautogui.press('enter') 
+        #-----------------------------------------------------------------
+        if not CreatedTools.FindImage('chatAnexar_wtt.png'):
+            return
+        if not CreatedTools.FindImage('anexarArquivo_wtt.png'):
+            return
+        pyperclip.copy(tabelaDeEnvio_dir)
+        pyautogui.hotkey("ctrl","a")
+        pyautogui.hotkey("ctrl","v")
+        #if not CreatedTools.FindImage('abrirArquivo_wtt.png'):
+        pyautogui.press('enter')
+        pyautogui.press('enter') 
         
         
 
@@ -251,15 +251,15 @@ def executarEm_hora_minuto(hora, minuto):
 
 
 def chamarFuncoesEnvio():
-    #mensagemPronta = "Estamos chegando!!!\n\nVocê quer aumentar sua renda?\n\nO agileGo, o novo app de entregas que vai proporcionar mais oportunidades de ganho para você, veja o diferencial:\n\n- Receber pedidos de estabelecimentos de forma rápida e fácil;\n- Mais entregas por rota;\n- Maior ganho financeiro;\n- Ter mais flexibilidade para escolher seus horários e regiões de entrega.\n\nSe você está procurando uma oportunidade de ganho que te dê mais autonomia e renda, cadastre-se no agileGo.\n\nEm breve faça o seu cadastro e seja um dos nossos parceiros.\n\nConfira nosso site: https://www.agilego.com.br/\n\nNos siga nas redes:\n\nInstagram: https://abreai.link/3v8tl\nFacebook: https://abreai.link/nyo8k\nLinkedin: https://abreai.link/yliup"
-    mensagemPronta = "Teste de envio"
-    
-    EnvioMensagem_wtt(mensagemPronta)
-    #EnvioMensagem_wtt(mensagemPronta,"ESPELHO")
+    arquivo = "agiliGO.jif"
+    mensagemPronta = "Estamos chegando!!!\n\nVocê quer aumentar sua renda?\n\nO agileGo, o novo app de entregas que vai proporcionar mais oportunidades de ganho para você, veja o diferencial:\n\n- Receber pedidos de estabelecimentos de forma rápida e fácil;\n- Mais entregas por rota;\n- Maior ganho financeiro;\n- Ter mais flexibilidade para escolher seus horários e regiões de entrega.\n\nSe você está procurando uma oportunidade de ganho que te dê mais autonomia e renda, cadastre-se no agileGo.\n\nEm breve faça o seu cadastro e seja um dos nossos parceiros.\n\nConfira nosso site: https://www.agilego.com.br/\n\nNos siga nas redes:\n\nInstagram: https://abreai.link/3v8tl\nFacebook: https://abreai.link/nyo8k\nLinkedin: https://abreai.link/yliup"
+    #mensagemPronta = "Teste de envio"
     
     #if executarEm_hora_minuto(18,15):      
-    #    EnvioMensagem_wtt("Acesse este link para visualizar nosso catálogo no WhatsApp: https://wa.me/c/555191086827")    
-    publicarResultados("Fechamento","Equipe Financeiro")
+    
+    #EnvioMensagem_wtt(mensagemPronta,"ESPELHO")
+    EnvioMensagem_wtt(mensagemPronta,arquivo)
+    publicarResultados(arquivo,"Equipe Financeiro")
  
     
 chamarFuncoesEnvio()
