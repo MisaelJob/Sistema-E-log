@@ -251,14 +251,15 @@ def executarEm_hora_minuto(hora, minuto):
 
 
 def chamarFuncoesEnvio():
-    mensagemPronta = "Estamos chegando!!!\n\nVocê quer aumentar sua renda?\n\nO agileGo, o novo app de entregas que vai proporcionar mais oportunidades de ganho para você, veja o diferencial:\n\n- Receber pedidos de estabelecimentos de forma rápida e fácil;\n- Mais entregas por rota;\n- Maior ganho financeiro;\n- Ter mais flexibilidade para escolher seus horários e regiões de entrega.\n\nSe você está procurando uma oportunidade de ganho que te dê mais autonomia e renda, cadastre-se no agileGo.\n\nEm breve faça o seu cadastro e seja um dos nossos parceiros.\n\nConfira nosso site: https://www.agilego.com.br/\n\nNos siga nas redes:\n\nInstagram: https://abreai.link/3v8tl\nFacebook: https://abreai.link/nyo8k\nLinkedin: https://abreai.link/yliup"
-
-    EnvioMensagem_wtt(mensagemPronta,"agileGO.jif")
-    EnvioMensagem_wtt(mensagemPronta,"agileGO.jif")
+    #mensagemPronta = "Estamos chegando!!!\n\nVocê quer aumentar sua renda?\n\nO agileGo, o novo app de entregas que vai proporcionar mais oportunidades de ganho para você, veja o diferencial:\n\n- Receber pedidos de estabelecimentos de forma rápida e fácil;\n- Mais entregas por rota;\n- Maior ganho financeiro;\n- Ter mais flexibilidade para escolher seus horários e regiões de entrega.\n\nSe você está procurando uma oportunidade de ganho que te dê mais autonomia e renda, cadastre-se no agileGo.\n\nEm breve faça o seu cadastro e seja um dos nossos parceiros.\n\nConfira nosso site: https://www.agilego.com.br/\n\nNos siga nas redes:\n\nInstagram: https://abreai.link/3v8tl\nFacebook: https://abreai.link/nyo8k\nLinkedin: https://abreai.link/yliup"
+    mensagemPronta = "Teste de envio"
+    
+    EnvioMensagem_wtt(mensagemPronta)
+    #EnvioMensagem_wtt(mensagemPronta,"ESPELHO")
     
     #if executarEm_hora_minuto(18,15):      
     #    EnvioMensagem_wtt("Acesse este link para visualizar nosso catálogo no WhatsApp: https://wa.me/c/555191086827")    
-     #   publicarResultados("Teste de envio","Equipe Financeiro")
+    publicarResultados("Fechamento","Equipe Financeiro")
  
     
 chamarFuncoesEnvio()

@@ -178,10 +178,9 @@ def TabelarCafs(INICIO=1,PAGINAS=3, REPOSITORIO = "G:\Meu Drive\DRIVE MISAEL\REP
                 df_cafs = df_cafs.drop_duplicates(subset='C.A.F.', keep='last')
                 #--------------------------------------------------------------
                 df_cafs.to_excel(REPOSITORIO, index=False)
-            #--------------------------------------------------------------------------------------------------
-          
-          
-          
-#SelectCheckBox()
+            #--------------------------------------------------------------------------------------------------          
 
+
+
+#SelectCheckBox()
 TabelarCafs(1,35)
