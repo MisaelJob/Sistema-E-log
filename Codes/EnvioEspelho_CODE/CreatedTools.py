@@ -82,21 +82,16 @@ def cttName(name):
 
 
 def toTelephoneNum(text):
-    tel = str(text)
-    tellDD = ""
-    tel8 =  ""
-    telRe = re.findall(r'[0-9]*', tel)
-    telRe = ''.join(telRe)
-    #----------------------------------------------------
-    tel8 = telRe[-8:]
+    numeros = re.findall(r'\d', text)
     
-    formateTel = f"{tel8}"
-    try:
-        formateTel = int(formateTel)
-    except:
+    if len(numeros) >= 12:
+        formateTel = int(''.join(numeros[:4] + numeros[-8:]))
+    elif len(numeros) >= 10:
+        formateTel = int('55' + ''.join(numeros[:2] + numeros[-8:]))
+    else:
         formateTel = 0
-    #print(f'----------> Valor: {text}, tratado para: {formateTel}')
     return formateTel
+
     
 
 def ProcurarContato_wtt(pesquisa,telefone=0):
@@ -127,8 +122,7 @@ def ProcurarContato_wtt(pesquisa,telefone=0):
             #---------------------------------------------------------------------------------------------
         elif metodoAtual == "linkDireto":
             pyautogui.hotkey('alt','d')
-            pyperclip.copy("https://web.whatsapp.com/send/?phone=" + "5193534110")
-            #pyperclip.copy("https://web.whatsapp.com/send/?phone=" + toTelephoneNum(telefone))
+            pyperclip.copy("https://web.whatsapp.com/send/?phone=" + str(toTelephoneNum(telefone)))
             pyautogui.hotkey('ctrl','v')
             pyautogui.press('enter')
             time.sleep(2)
