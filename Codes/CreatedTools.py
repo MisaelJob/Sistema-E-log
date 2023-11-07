@@ -7,6 +7,8 @@ import win32com.client
 import re
 import pyperclip
 import requests
+import xlwings as xw
+
 
 def DetectResolution():
     root = Tk()
@@ -62,13 +64,25 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",attempts=4,imageFolder=
     return returnValue
 
 
-def funcionVBA(*args):
-   excelApp = win32com.client.Dispatch("Excel.Application")
-   excelWorkbook = excelApp.ActiveWorkbook
-   resultado = excelWorkbook.Application.Run(*args)
-   #print(f'----------> Função VBA {args[0]} chamada.')
-   return resultado
+
+def funcionVBA(FUNCTION_NAME, DIRETORIO):
+    try:
+        app = xw.apps.active
+        arquivoExcel = app.books.active
+        arquivoExcel.macro(FUNCTION_NAME).run()
+    except Exception as e:
+        #---------------------------------------------------------
+        if not DIRETORIO == "":
+            try:
+                #if 'NoneType' in str(e) and "'books'" in str(e):
+                arquivoExcel = xw.Book(DIRETORIO)
+                arquivoExcel.macro(FUNCTION_NAME).run()
+                arquivoExcel.save()
+                arquivoExcel.app.quit()
+            except Exception:
+                pass
   
+
 
 def cttName(name):
     correctName = str(name)
@@ -83,7 +97,7 @@ def cttName(name):
 
 def toTelephoneNum(text):
     numeros = re.findall(r'\d', text)
-    
+    #-------------------------------------------------------
     if len(numeros) >= 12:
         formateTel = int(''.join(numeros[:4] + numeros[-8:]))
     elif len(numeros) >= 10:
@@ -216,7 +230,7 @@ def ArchiveType(arquivo):
 def MousePosition_X_Y():
     time.sleep(2)
     print(pyautogui.position())
-MousePosition_X_Y()
+#MousePosition_X_Y()
 
 
 

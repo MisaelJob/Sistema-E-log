@@ -1,6 +1,6 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append('.')
 from bs4 import BeautifulSoup
 import requests
 import pyautogui
@@ -8,7 +8,7 @@ import time
 from pathlib import Path
 from detectResolution import detectResolution
 import pyperclip
-from general_CODE import CreatedTools
+from Codes import CreatedTools
 import pandas as pd
 import datetime
 import openpyxl
@@ -25,6 +25,7 @@ ics_link = "https://ics.totalexpress.com.br/index.php"
 operacoesCAF_link = "https://ics.totalexpress.com.br/agentes/caf.php"
 buscaPorLote_link = "https://ics.totalexpress.com.br/oper/relat_ultimostatus.php"
 cafsIcsDrive_dir = "G:\Meu Drive\DRIVE MISAEL\REPOSITORIO EASY\RELATORIOS\ICS_cafs.xlsm"
+totalCafsQuinzena_dir = "G:\Meu Drive\DRIVE MISAEL\REPOSITORIO EASY\RELATORIOS\TotalCafsQuinzena.xlsx"
 
 def LoginICS(baseICS):
     pyautogui.press('win')
@@ -186,25 +187,21 @@ def TabelarCafs(INICIO=1,PAGINAS=3, REPOSITORIO = cafsIcsDrive_dir ,FILTROS=['se
 
 
 
-def BaixarLote(DATA_INICIO='2001-01-01',DATA_FINAL='2001-01-01',QTD_CAFS=10,IMG_CAMPO="",REPOSITORIO = cafsIcsDrive_dir):
+def BaixarLote(DATA_INICIO='2001-01-01',DATA_FINAL='2031-01-01',QTD_CAFS=10,IMG_CAMPO="",REPOSITORIO = cafsIcsDrive_dir):
     if os.path.isfile(REPOSITORIO):
         df_cafs = pd.read_excel(REPOSITORIO)
     else:
         df_cafs = pd.DataFrame()
-    #-------------------------------------------------------------------------
+    #------------------------------------------------------------------------
     CreatedTools.funcionVBA('CorrigirDatas',REPOSITORIO)
     df_cafs['Data de Abertura'] = pd.to_datetime(df_cafs['Data de Abertura'])
-    #-------------------------------------------------------------------------
-    tipo_de_dados = df_cafs[(df_cafs['Data de Abertura'] >= DATA_INICIO) & (df_cafs['Data de Abertura'] <= DATA_FINAL)]
-    print(tipo_de_dados)
+    cafsFiltradas = df_cafs[(df_cafs['Data de Abertura'] >= DATA_INICIO) & (df_cafs['Data de Abertura'] <= DATA_FINAL)]
+    #------------------------------------------------------------------------------------------------------------------
+    #CreatedTools.FindImage()
     
-    
- 
- 
- 
     
 
           
 #SelectCheckBox()
 #TabelarCafs(1,30)
-BaixarLote()
+BaixarLote('2023-11-01','2023-11-01')
