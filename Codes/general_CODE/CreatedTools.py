@@ -8,7 +8,7 @@ import re
 import pyperclip
 import requests
 import os
-
+import xlwings as xw
 
 
 def RootFolder():
@@ -31,7 +31,6 @@ resolution = DetectResolution()
 
 
 
-
 def FindImage(imageName,posX = 0,posY = 0,action="click",imageFolder=f"{rootFolder_dir}\\Codes\\EnvioEspelho_CODE\\images\\{resolution}",aguardar = 4):
     #-------------------------------------------------------
     particaoDoTexto = imageName.split(".")
@@ -48,7 +47,6 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",imageFolder=f"{rootFold
         time.sleep(1)
         if pesquisa_wtt_posX is not None:
             break
-        
         for variacao in list_variacoesIMG:
             dirVariacao = variacao.as_posix()
             print(tentativa,dirVariacao)
@@ -62,7 +60,6 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",imageFolder=f"{rootFold
                 pesquisa_wtt_posX = pesquisa_wtt_posX + posX
                 pesquisa_wtt_posY = pesquisa_wtt_posY + posY
                 break
-        
     #---------------------------------------------------------------------------------
     if pesquisa_wtt_posX != None:
         if action == "click":
@@ -82,15 +79,24 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",imageFolder=f"{rootFold
     return returnValue
     
     
-    
 
-
-def funcionVBA(*args):
-   excelApp = win32com.client.Dispatch("Excel.Application")
-   excelWorkbook = excelApp.ActiveWorkbook
-   resultado = excelWorkbook.Application.Run(*args)
-   #print(f'----------> Função VBA {args[0]} chamada.')
-   return resultado
+def funcionVBA(FUNCTION_NAME, DIRETORIO):
+    try:
+        app = xw.apps.active
+        arquivoExcel = app.books.active
+        arquivoExcel.macro(FUNCTION_NAME).run()
+    except Exception as e:
+        #---------------------------------------------------------
+        if not DIRETORIO == "":
+            try:
+                #if 'NoneType' in str(e) and "'books'" in str(e):
+                arquivoExcel = xw.Book(DIRETORIO)
+                arquivoExcel.macro(FUNCTION_NAME).run()
+                arquivoExcel.save()
+                arquivoExcel.app.quit()
+            except Exception:
+                pass
+       
   
 
 def cttName(name):
@@ -182,7 +188,7 @@ def ProcurarContato_wtt(pesquisa,telefone=0):
         pesqContato_wtt = pyperclip.paste()
         #-----------------------------------------------------------------------------------
         if not FindImage('fecharPerfil_wtt.png'):
-                pyautogui.press("esc") 
+            pyautogui.press("esc") 
         #-----------------------------------------------------------------------------------
         if pesqContato_wtt == pesquisa:
             return True

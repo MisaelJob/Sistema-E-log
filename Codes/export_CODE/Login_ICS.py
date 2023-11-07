@@ -10,6 +10,9 @@ from detectResolution import detectResolution
 import pyperclip
 from general_CODE import CreatedTools
 import pandas as pd
+import datetime
+import openpyxl
+import xlwings as xw
 
 
 pyautogui.PAUSE = 0.5
@@ -21,7 +24,7 @@ dirIMG = f'{dir}\\images\\{resolution}'
 ics_link = "https://ics.totalexpress.com.br/index.php"
 operacoesCAF_link = "https://ics.totalexpress.com.br/agentes/caf.php"
 buscaPorLote_link = "https://ics.totalexpress.com.br/oper/relat_ultimostatus.php"
-
+cafsIcsDrive_dir = "G:\Meu Drive\DRIVE MISAEL\REPOSITORIO EASY\RELATORIOS\ICS_cafs.xlsm"
 
 def LoginICS(baseICS):
     pyautogui.press('win')
@@ -103,7 +106,7 @@ def SelectCheckBox():
        
 
     
-def TabelarCafs(INICIO=1,PAGINAS=3, REPOSITORIO = "G:\Meu Drive\DRIVE MISAEL\REPOSITORIO EASY\RELATORIOS\ICS_cafs.xlsx",FILTROS=['selecionarEncerrados.png','selecioanarAndamento.png']):    
+def TabelarCafs(INICIO=1,PAGINAS=3, REPOSITORIO = cafsIcsDrive_dir ,FILTROS=['selecionarEncerrados.png','selecioanarAndamento.png']):    
     if os.path.isfile(REPOSITORIO):
         df_cafs = pd.read_excel(REPOSITORIO)
     else:
@@ -179,9 +182,29 @@ def TabelarCafs(INICIO=1,PAGINAS=3, REPOSITORIO = "G:\Meu Drive\DRIVE MISAEL\REP
                 #--------------------------------------------------------------
                 df_cafs.to_excel(REPOSITORIO, index=False)
             #--------------------------------------------------------------------------------------------------
-          
-          
+
+
+
+
+def BaixarLote(DATA_INICIO='2001-01-01',DATA_FINAL='2001-01-01',QTD_CAFS=10,IMG_CAMPO="",REPOSITORIO = cafsIcsDrive_dir):
+    if os.path.isfile(REPOSITORIO):
+        df_cafs = pd.read_excel(REPOSITORIO)
+    else:
+        df_cafs = pd.DataFrame()
+    #-------------------------------------------------------------------------
+    CreatedTools.funcionVBA('CorrigirDatas',REPOSITORIO)
+    df_cafs['Data de Abertura'] = pd.to_datetime(df_cafs['Data de Abertura'])
+    #-------------------------------------------------------------------------
+    tipo_de_dados = df_cafs[(df_cafs['Data de Abertura'] >= DATA_INICIO) & (df_cafs['Data de Abertura'] <= DATA_FINAL)]
+    print(tipo_de_dados)
+    
+    
+ 
+ 
+ 
+    
+
           
 #SelectCheckBox()
-
-TabelarCafs(1,35)
+#TabelarCafs(1,30)
+BaixarLote()
