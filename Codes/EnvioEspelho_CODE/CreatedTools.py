@@ -34,7 +34,7 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",attempts=4,imageFolder=
         try:
             pesquisa_wtt_posX, pesquisa_wtt_posY = pyautogui.locateCenterOnScreen(f"{rootFolder_dir}/{imageFolder}/{resolution}/{imageName}", confidence=0.9)
         except: 
-            break
+            continue
         #---------------------------------------------------------------------------------
         pesquisa_wtt_posX = pesquisa_wtt_posX + posX
         pesquisa_wtt_posY = pesquisa_wtt_posY + posY
@@ -82,113 +82,99 @@ def cttName(name):
 
 
 def toTelephoneNum(text):
-    tel = str(text)
-    tellDD = ""
-    tel8 =  ""
-    telRe = re.findall(r'[0-9]*', tel)
-    telRe = ''.join(telRe)
-    #----------------------------------------------------
-    tel8 = telRe[-8:]
+    numeros = re.findall(r'\d', text)
     
-    formateTel = f"{tel8}"
-    try:
-        formateTel = int(formateTel)
-    except:
+    if len(numeros) >= 12:
+        formateTel = int(''.join(numeros[:4] + numeros[-8:]))
+    elif len(numeros) >= 10:
+        formateTel = int('55' + ''.join(numeros[:2] + numeros[-8:]))
+    else:
         formateTel = 0
-    #print(f'----------> Valor: {text}, tratado para: {formateTel}')
     return formateTel
+
     
-    
+
 def ProcurarContato_wtt(pesquisa,telefone=0):
-    #----------------------------------------------------
+    returnContatoEncontrado = False    
     FindImage('fecharPerfil_wtt.png')
     pyautogui.press('esc')
     #----------------------------------------------------
     if not valido(pesquisa):
         return False
-    #----------------------------------------------------
     pyperclip.copy(pesquisa)
-    #pyautogui.hotkey("ctrl","alt","/")
-    pyautogui.click(824,169)
-    pyautogui.hotkey("ctrl","a")
-    pyautogui.hotkey('ctrl','v')
-    pyautogui.press('enter')
     #----------------------------------------------------
-    #pyautogui.hotkey("ctrl","alt","/")
-    pyautogui.click(824,169)
-    pyautogui.hotkey("ctrl","a")
-    pyautogui.press('backspace')
-    #----------------------------------------------------
-    
-    
-    
-    if not FindImage('opcoesPerfil_wtt.png',20):
-        pass
-    #----------------------------------------------------
-    if not FindImage('dadosDoContato_wtt.png'):
-        if not FindImage('dadosDoContato_2_wtt.png'):
-            if not FindImage('dadosDoContato_3_wtt.png'):
-                return False
-    #----------------------------------------------------
-    
-    tentativaNomeContato = range(0,1,2)
-    for tentantivaContador in tentativaNomeContato:
-        print(tentantivaContador)
-        #-----------------------------------------------------------------------------------
-        if FindImage('contaOficialPerfil.png'):
-            pyautogui.scroll(-2000)
-            time.sleep(1)
-            #-----------------------------------------------------------------------------------
+    metodosDeBusca = ["pesquisaWtt","linkDireto"]
+    for metodoAtual in metodosDeBusca:
+        if returnContatoEncontrado == True:
+                break
+        #------------------------------------------------
+        if metodoAtual == "pesquisaWtt":
+            #pyautogui.hotkey("ctrl","alt","/")
+            pyautogui.click(824,169)
+            pyautogui.hotkey("ctrl","a")
+            pyautogui.hotkey('ctrl','v')
+            pyautogui.press('enter')
+            #--------------------------------------------
+            #pyautogui.hotkey("ctrl","alt","/")
+            pyautogui.click(824,169)
+            pyautogui.hotkey("ctrl","a")
+            pyautogui.press('backspace')
+            #---------------------------------------------------------------------------------------------
+        elif metodoAtual == "linkDireto":
+            pyautogui.hotkey('alt','d')
+            pyperclip.copy("https://web.whatsapp.com/send/?phone=" + str(toTelephoneNum(telefone)))
+            pyautogui.hotkey('ctrl','v')
+            pyautogui.press('enter')
+            time.sleep(2)
+            if not FindImage('inicioPagina_wtt.png',attempts=200):
+                continue
+            time.sleep(2)
+        #---------------------------------------------------------------------------------------------
+        if not FindImage('opcoesPerfil_wtt.png',20):
+            if not FindImage('opcoesPerfil2_wtt.png'):
+                pass
+        #----------------------------------------------------
+        if not FindImage('dadosDoContato_wtt.png'):
+            if not FindImage('dadosDoContato_2_wtt.png'):
+                if not FindImage('dadosDoContato_3_wtt.png'):
+                    continue
+        #----------------------------------------------------
+        tentativaValidadarNomeContato = range(0,3,1)
+        for tentantivaContador in tentativaValidadarNomeContato:
+            if returnContatoEncontrado == True:
+                break
+            #----------------------------------------------------
             if tentantivaContador == 0:
-                pyautogui.moveRel(-50, 100, duration=0.5)
-            #-----------------------------------------------------------------------------------
+                pyautogui.moveRel(-50, 213, duration=0.5)
             elif tentantivaContador == 1:
-                pyautogui.moveRel(-50, 225, duration=0.5)
-            else:
-                return False 
-        #-----------------------------------------------------------------------------------
-        else:
-            if tentantivaContador == 0:
-                pyautogui.moveRel(-50, 233, duration=0.5)
-            elif tentantivaContador == 1:
-                pyautogui.moveRel(-50, 260, duration=0.5)
-            elif tentantivaContador == 1:
-                pyautogui.moveRel(-50, 282, duration=0.5)
-        #-----------------------------------------------------------------------------------
-        pyperclip.copy("")
-        pesqContato_wtt = ""
-        #-----------------------------------------------------------------------------------
-        pyautogui.click(clicks=3)
-        pyautogui.hotkey('ctrl','c')
-        pesqContato_wtt = pyperclip.paste()
-        #-----------------------------------------------------------------------------------
-        if not FindImage('fecharPerfil_wtt.png'):
-                pyautogui.press("esc") 
-        #-----------------------------------------------------------------------------------
-        
-
-        if pesqContato_wtt == pesquisa:
-            return True
-        elif cttName(pesqContato_wtt) == pesquisa:
-            return True
-        else:
-            #print(f"nome:{pesquisa} wtt:{pesqContato_wtt}")
-            pass
-
-    
-        if valido(toTelephoneNum(pesqContato_wtt)) and valido(toTelephoneNum(telefone)):
-            if toTelephoneNum(pesqContato_wtt) == toTelephoneNum(telefone):
-                return True
-        elif valido(toTelephoneNum(pesqContato_wtt)) and valido(toTelephoneNum(pesquisa)):   
-            if toTelephoneNum(pesqContato_wtt) == toTelephoneNum(pesquisa):
-                return True 
-        else:
-            #print(f"nome:{toTelephoneNum(pesquisa)} tel:{toTelephoneNum(telefone)} wtt:{toTelephoneNum(pesqContato_wtt)}")
-            pass
-
-
-    return False
-    #-----------------------------------------------------------------------------------
+                pyautogui.moveRel(0, 20, duration=0.5)
+            elif tentantivaContador == 2:
+                pyautogui.moveRel(0, 30, duration=0.5)
+            #----------------------------------------------------
+            pyperclip.copy("")
+            pesqContato_wtt = ""
+            #-----------------------------------
+            pyautogui.click(clicks=3)
+            pyautogui.hotkey('ctrl','c')
+            pesqContato_wtt = pyperclip.paste()
+            #-----------------------------------
+            if pesqContato_wtt == pesquisa:
+                returnContatoEncontrado = True    
+            elif cttName(pesqContato_wtt) == pesquisa:
+                returnContatoEncontrado = True 
+            #-------------------------------------------------------------------------------
+            if valido(toTelephoneNum(pesqContato_wtt)) and valido(toTelephoneNum(telefone)):
+                if toTelephoneNum(pesqContato_wtt) == toTelephoneNum(telefone):
+                    returnContatoEncontrado = True                                     
+            elif valido(toTelephoneNum(pesqContato_wtt)) and valido(toTelephoneNum(pesquisa)):   
+                if toTelephoneNum(pesqContato_wtt) == toTelephoneNum(pesquisa):
+                    returnContatoEncontrado = True                 
+    #----------------------------------------------------------------------------------------
+    if not FindImage('fecharPerfil_wtt.png'):
+        pyautogui.press("esc") 
+    #----------------------------------------
+    return returnContatoEncontrado
+    #----------------------------------------
     
     
  
@@ -230,7 +216,7 @@ def ArchiveType(arquivo):
 def MousePosition_X_Y():
     time.sleep(2)
     print(pyautogui.position())
-#MousePosition_X_Y()
+MousePosition_X_Y()
 
 
 
