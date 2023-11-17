@@ -10,6 +10,7 @@ import requests
 import xlwings as xw
 
 
+
 def DetectResolution():
     root = Tk()
     Xwidht = root.winfo_screenwidth()
@@ -20,6 +21,7 @@ def DetectResolution():
 resolution = DetectResolution()
 
 
+
 def RootFolder():
     thisArchive_dir = Path().absolute()
     caracters_dir = str(thisArchive_dir).find("Sistema-E-log") + 13
@@ -28,39 +30,54 @@ def RootFolder():
     return nowRootFolder_dir
 rootFolder_dir = RootFolder()
 
+ 
 
-def FindImage(imageName,posX = 0,posY = 0,action="click",attempts=4,imageFolder="Codes/EnvioEspelho_CODE/images"):
+def FindImage(imageName,posX = 0,posY = 0,action="click",attempts=4,imageFolder=f"{rootFolder_dir}/Codes/EnvioEspelho_CODE/images/{resolution}"):
+    ultimoPontoImageName = str(imageName).rfind('.')
+    nomeImgSemTipo = imageName[0:ultimoPontoImageName]
+    #-------------------------------------------------------------------------
+    enderecoImagem_list = list(Path(imageFolder).glob(f"{nomeImgSemTipo}_*"))
+    enderecoImagem_list.append(f'{imageFolder}\\{imageName}')
+    #-------------------------------------------------------------------------
+    pesquisa_wtt_posX = None 
+    pesquisa_wtt_posY = None
     returnValue = False
-    for attempt in range(1, attempts+1, 1):
+    #-------------------------------------------------------------------------
+    for attempt in range(1, int(attempts)+1, 1):
         time.sleep(1)
-        try:
-            pesquisa_wtt_posX, pesquisa_wtt_posY = pyautogui.locateCenterOnScreen(f"{rootFolder_dir}/{imageFolder}/{resolution}/{imageName}", confidence=0.9)
-        except: 
-            continue
-        #---------------------------------------------------------------------------------
-        pesquisa_wtt_posX = pesquisa_wtt_posX + posX
-        pesquisa_wtt_posY = pesquisa_wtt_posY + posY
-        
+        #--------------------------------------------------------------------------------------------------------
+        for img in enderecoImagem_list:
+            try:
+                pesquisa_wtt_posX, pesquisa_wtt_posY = pyautogui.locateCenterOnScreen(str(img), confidence=0.85)
+            except:
+                continue
+            #----------------------------------------------------------------------------------------------------
+            if pesquisa_wtt_posX != None:
+                break
+        #-------------------------------------------------
         if pesquisa_wtt_posX != None:
-            if action == "click":
+            pesquisa_wtt_posX = pesquisa_wtt_posX + posX
+            pesquisa_wtt_posY = pesquisa_wtt_posY + posY
+            #----------------------------------------------
+            if action == "aguardar":
+                returnValue = True
+                continue
+            #--------------------------------------------------------
+            elif action == "click":
                 pyautogui.click(pesquisa_wtt_posX,pesquisa_wtt_posY)
                 returnValue = True
                 break
+            #--------------------------------------------------------
             elif action == "moveTo":
                 pyautogui.moveTo(pesquisa_wtt_posX,pesquisa_wtt_posY)
                 returnValue = True
                 break
+            #--------------------------------------------------------
             else:
-                break   
-        elif attempt == attempts:
-            break
-        #--------------------------------------------------------------------------------- 
-    if returnValue:
-        #print(f'----------> Imagem {imageName}, encontrada com sucesso.')
-        pass
-    else:
+                continue   
+        #-------------------------------------------------------------
+    if returnValue == False:
         print(f'----------> Imagem {imageName}, não encontrada.')
-        pass
     return returnValue
 
 
@@ -93,6 +110,7 @@ def cttName(name):
     novo_nome = novo_nome.strip()
     #print(f'----------> Valor: {name}, tratado para: {novo_nome}')
     return novo_nome
+
 
 
 def toTelephoneNum(text):
@@ -191,9 +209,7 @@ def ProcurarContato_wtt(pesquisa,telefone=0):
     #----------------------------------------
     
     
- 
-    
-    
+  
 def ArchiveType(arquivo):
     arquivo = str(arquivo)
     arquivo = arquivo.lower()
@@ -226,12 +242,12 @@ def ArchiveType(arquivo):
     #----------------------------------------------------   
     return resposta
         
+        
 
 def MousePosition_X_Y():
     time.sleep(2)
     print(pyautogui.position())
 #MousePosition_X_Y()
-
 
 
 
