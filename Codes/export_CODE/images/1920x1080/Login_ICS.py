@@ -333,11 +333,11 @@ def RelatorioTotalExpress(DATA_INICIO='2001-01-01',DATA_FINAL='2031-01-01',QTD_L
         return tempoDeExecucao_time
     TempoDeExecucao()
     #-----------------------------------------------------------------------------------------------------------------------
-    #paginas = PAGINAS_CAF
-    #for baseOp in ['PFD','CSX']:
-    #    LoginICS(baseOp) 
-    #    #------------------------------
-    #    ExportarOperacaoCafs(1,paginas)  
+    paginas = PAGINAS_CAF
+    for baseOp in ['PFD','CSX']:
+        LoginICS(baseOp) 
+        #------------------------------
+        ExportarOperacaoCafs(1,paginas)  
     #-----------------------------------------------------------------------------------------------------------------------  
     CreatedTools.funcionVBA('TratarColunasDeNumeros',DIRETORIO)
     if os.path.isfile(DIRETORIO):
@@ -345,20 +345,19 @@ def RelatorioTotalExpress(DATA_INICIO='2001-01-01',DATA_FINAL='2031-01-01',QTD_L
     else:
         df_cafs = pd.DataFrame() 
     #-----------------------------------------------------------------------------------------------------------------------
-    #def tentar_formatos(data):
-     #   formatos = ['%d/%m/%Y', '%Y-%m-%d %H:%M:%S']  
-      #  for formato in formatos:
-     #       try:
-    #            return pd.to_datetime(data, format=formato)
-     #       except ValueError:
-     #           pass
+    def tentar_formatos(data):
+        formatos = ['%d/%m/%Y', '%Y-%m-%d %H:%M:%S']  
+        for formato in formatos:
+            try:
+                return pd.to_datetime(data, format=formato)
+            except ValueError:
+                pass
         
     #----------------------------------------------------------------------------------
-   #df_cafs['Data de Abertura'] = df_cafs['Data de Abertura'].apply(tentar_formatos)
+    df_cafs['Data de Abertura'] = df_cafs['Data de Abertura'].apply(tentar_formatos)
     #-----------------------------------------------------------------------------------------------------------------------
-    cafsFiltradas = df_cafs
-    #cafsFiltradas = df_cafs[(df_cafs['Data de Abertura'] >= DATA_INICIO) & (df_cafs['Data de Abertura'] <= DATA_FINAL)]
-    #print(f'---->CAFs para baixar: {len(cafsFiltradas)}')
+    cafsFiltradas = df_cafs[(df_cafs['Data de Abertura'] >= DATA_INICIO) & (df_cafs['Data de Abertura'] <= DATA_FINAL)]
+    print(f'---->CAFs para baixar: {len(cafsFiltradas)}')
     #-----------------------------------------------------------------------------------------------------------------------
     LoginICS('Gerencial')
     cafsBaixadas = 0
@@ -388,8 +387,7 @@ def RelatorioTotalExpress(DATA_INICIO='2001-01-01',DATA_FINAL='2031-01-01',QTD_L
 
 
 
-SelectCheckBox()
-#RelatorioTotalExpress(DATA_INICIO='2023-10-24',DATA_FINAL='2023-11-15',PAGINAS_CAF=2)
-#ExportarOperacaoCafs(1,40)
-
+#SelectCheckBox()
+RelatorioTotalExpress(DATA_INICIO='2023-10-24',DATA_FINAL='2023-11-15',PAGINAS_CAF=2)
+#ExportarOperacaoCafs(1,30)
 
