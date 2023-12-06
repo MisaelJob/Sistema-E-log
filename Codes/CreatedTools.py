@@ -115,12 +115,15 @@ def cttName(name):
 
 
 def toTelephoneNum(text):
+    text=str(text)
     numeros = re.findall(r'\d', text)
     #-------------------------------------------------------
     if len(numeros) >= 12:
         formateTel = int(''.join(numeros[:4] + numeros[-8:]))
     elif len(numeros) >= 10:
         formateTel = int('55' + ''.join(numeros[:2] + numeros[-8:]))
+    elif len(numeros) >= 8:
+        formateTel = int('5551' + str(numeros[-8:]))
     else:
         formateTel = 0
     return formateTel
@@ -159,7 +162,7 @@ def ProcurarContato_wtt(pesquisa,telefone=0):
             pyautogui.hotkey('ctrl','v')
             pyautogui.press('enter')
             time.sleep(2)
-            if not FindImage('inicioPagina_wtt.png',attempts=200):
+            if not FindImage(imageName='inicioPagina_wtt.png',attempts=200,action='moveTo'):
                 continue
             time.sleep(2)
         #---------------------------------------------------------------------------------------------
@@ -224,6 +227,8 @@ def ArchiveType(arquivo):
     elif arquivo.find(".gif") != -1:
         resposta = "image" 
     elif arquivo.find(".tiff") != -1:
+        resposta = "image"
+    elif arquivo.find(".jfif") != -1:
         resposta = "image"
     elif arquivo.find(".svg") != -1:
         resposta = "image"

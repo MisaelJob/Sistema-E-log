@@ -30,7 +30,7 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
     tipoPagamento_tabEnvio = ""
     status_tabEnvio = ""
     #----------------------------------------------------
-    if not CreatedTools.FindImage('inicioPagina_wtt.png'):
+    if not CreatedTools.FindImage(imageName='inicioPagina_wtt.png',action="moveTo"):
         print("----------> Pagina da Web não encontrada!")
         return
     #----------------------------------------------------
@@ -54,13 +54,12 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
         except:
             status_tabEnvio = ""
         #----------------------------------------------------
-        if not CreatedTools.ProcurarContato_wtt(nomeContato_tabEnvio,telefone_tabEnvio):
-            if not CreatedTools.ProcurarContato_wtt(telefone_tabEnvio,nomeContato_tabEnvio):
-                tabelaDeEnvio_dt.loc[index,'STATUS'] = "NÃO ENCONTRADO"
-                tabelaDeEnvio_dt.to_excel(tabelaDeEnvio_dir,index=False)
-                if comentarios:
-                    print("----------> Contato não encontrado!")
-                continue
+        if not CreatedTools.ProcurarContato_wtt(nomeContato_tabEnvio,telefone_tabEnvio):  
+            tabelaDeEnvio_dt.loc[index,'STATUS'] = "NÃO ENCONTRADO"
+            tabelaDeEnvio_dt.to_excel(tabelaDeEnvio_dir,index=False)
+            if comentarios:
+                print("----------> Contato não encontrado!")
+            continue
         #----------------------------------------------------
         if arquivo == "":
             pass
@@ -192,7 +191,8 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
         else:
             CreatedTools.FindImage('iconesChat_wtt.png',100)
             #----------------------------------------------------
-            mensagemDeEnvio = f"Olá {nomeContato_tabEnvio}?\n" + mensagem
+            #mensagemDeEnvio = f"Olá {nomeContato_tabEnvio}?\n" + mensagem
+            mensagemDeEnvio = mensagem
             pyperclip.copy(mensagemDeEnvio)
             pyautogui.hotkey('ctrl','v')
             pyautogui.press('enter')
@@ -206,7 +206,7 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
 
 
 def publicarResultados(arquivo,contato):
-    if not CreatedTools.FindImage('inicioPagina_wtt.png'):
+    if not CreatedTools.FindImage(imageName='inicioPagina_wtt.png',action='moveTo'):
         print("----------> Pagina da Web não encontrada!")
         return
     #----------------------------------------------------
@@ -255,8 +255,9 @@ def executarEm_hora_minuto(hora, minuto):
 
 def chamarFuncoesEnvio():
     arquivo = "ESPELHO"
-    #mensagemPronta = "Estamos chegando!!!\n\nVocê quer aumentar sua renda?\n\nO agileGo, o novo app de entregas que vai proporcionar mais oportunidades de ganho para você, veja o diferencial:\n\n- Receber pedidos de estabelecimentos de forma rápida e fácil;\n- Mais entregas por rota;\n- Maior ganho financeiro;\n- Ter mais flexibilidade para escolher seus horários e regiões de entrega.\n\nSe você está procurando uma oportunidade de ganho que te dê mais autonomia e renda, cadastre-se no agileGo.\n\nEm breve faça o seu cadastro e seja um dos nossos parceiros.\n\nConfira nosso site: https://www.agilego.com.br/\n\nNos siga nas redes:\n\nInstagram: https://abreai.link/3v8tl\nFacebook: https://abreai.link/nyo8k\nLinkedin: https://abreai.link/yliup"
-    mensagemPronta = "Segue *1°* quinzena de *Outubro* ALTERADA.\n-Entregas 01 a 15/10 \n-Pagamento 16/11"
+    #mensagemPronta = "🚨🚀Descubra a revolução nas entregas! 🚚 O app agileGo já está disponível na Play Store! 📲✨\n\nFaça o download agora e aproveite:\n\n🌟 Valores de bônus semanais que vão te surpreender!\n📣 Bônus incríveis por indicação de amigos.\n💰 Valores agressivos por entrega (70%), garantindo o seu bolso cheio!\n🎉 Brindes para os primeiros a se cadastrar e carregar, e muito mais.\n\nNão perca tempo, junte-se à equipe agileGo e ganhe mais a cada entrega.\n\nBaixe agora em https://play.google.com/store/apps/details?id=br.com.agilego e comece a lucrar! 💵💼\n\nSaiba mais: www.agilego.com.br"
+
+    mensagemPronta = "Segue *primeira* quinzena de *Novembro.*\n\nAlgumas CAFs não estavam aparecendo após manutenção do sistema da TOTAL EXPRESS, favor considerar apenas o ultimo envio."
     
     #if executarEm_hora_minuto(18,15):      
     
