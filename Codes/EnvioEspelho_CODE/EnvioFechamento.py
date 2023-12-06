@@ -1,9 +1,12 @@
+import sys
+import os
+sys.path.append('.')
+from Codes import CreatedTools
 import pyautogui
 import pyperclip
 import pandas as pd
 import time
 from pathlib import Path
-import CreatedTools
 import datetime
 
 rt = CreatedTools.rootFolder_dir
