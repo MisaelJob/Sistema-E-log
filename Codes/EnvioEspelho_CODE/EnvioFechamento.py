@@ -191,8 +191,7 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
         else:
             CreatedTools.FindImage('iconesChat_wtt.png',100)
             #----------------------------------------------------
-            #mensagemDeEnvio = f"Olá {nomeContato_tabEnvio}?\n" + mensagem
-            mensagemDeEnvio = mensagem
+            mensagemDeEnvio = f"Olá {nomeContato_tabEnvio}?\n" + mensagem
             pyperclip.copy(mensagemDeEnvio)
             pyautogui.hotkey('ctrl','v')
             pyautogui.press('enter')

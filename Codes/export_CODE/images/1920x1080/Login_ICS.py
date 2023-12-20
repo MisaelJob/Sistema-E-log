@@ -31,7 +31,7 @@ totalCafsQuinzena_dir = "G:\Meu Drive\DRIVE MISAEL\REPOSITORIO EASY\RELATORIOS\T
 
 
 
-def LoginICS(baseICS="",loginICS="",senhaICS=""):
+def LoginICS(baseICS):
     pyautogui.press('win')
     pyautogui.write('chrome')
     pyautogui.press('enter')
@@ -44,30 +44,15 @@ def LoginICS(baseICS="",loginICS="",senhaICS=""):
     pyautogui.hotkey('ctrl','v')
     pyautogui.press('enter')
     #--------------------------------------------------------------------------------------------
-    if not CreatedTools.FindImage(imageName='selectUsers_ICS.png',action="click",imageFolder=dirIMG):
+    if not CreatedTools.FindImage('selectUsers_ICS.png',0,0,"click",3,dirIMG):
         return
-    #--------------------------------------------------------------------------------------------  
-    if not CreatedTools.FindImage(imageName=f'loginName_ICS_{baseICS}.png',action="click",imageFolder=dirIMG):
-        print("erro1")
-        if not CreatedTools.FindImage(imageName='rolagemListaLogins_ICS.png',action="moveTo",imageFolder=dirIMG):
-            print("erro2")
+    #--------------------------------------------------------------------------------------------
+    if not CreatedTools.FindImage(f'loginName_ICS_{baseICS}.png',0,0,"click",3,dirIMG):
+        if not CreatedTools.FindImage('rolagemListaLogins_ICS.png',0,0,"moveTo",3,dirIMG):
             return
         pyautogui.scroll(-200)
-        if not CreatedTools.FindImage(imageName=f'loginName_ICS_{baseICS}.png',action="click",imageFolder=dirIMG):
-            print("erro3")
+        if not CreatedTools.FindImage(f'loginName_ICS_{baseICS}.png',0,0,"click",3,dirIMG):
             return
-    '''
-    #--------------------------------------------------------------------------------------------
-    pyautogui.hotkey('ctrl','a')
-    pyperclip.copy(loginICS)
-    pyautogui.hotkey('ctrl','v')
-    #---------------------------
-    pyautogui.press('tab')
-    pyautogui.hotkey('ctrl','a')
-    pyperclip.copy(senhaICS)
-    pyautogui.hotkey('ctrl','v')
-    #---------------------------
-    '''
     pyautogui.press('enter')
     #--------------------------------------------------------------------------------------------
 
@@ -115,7 +100,6 @@ def SelectCheckBox():
                 pyautogui.scroll(-400)
                 if pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.9) != None:
                     selectBox_position = pyautogui.locateCenterOnScreen(image_Rdir, confidence=0.9)
-                    
                     pyautogui.click(selectBox_position)
                     break
                 if loops >= maxLoops:
@@ -162,20 +146,20 @@ def ExportarOperacaoCafs(INICIO=1,PAGINAS=3, REPOSITORIO = cafsIcsDrive_dir ,FEC
             PAGINAS = 20
         #----------------------------------------------------------------------------------------------------------------------------------------
         for pagina in range(INICIO,PAGINAS):
-           # if pagina <= PAGINAS:
-            pyautogui.press('pagedown',presses=3)
-            if not CreatedTools.FindImage('operacoesCAF\\irParaPagina.png',-70,0,"click",3,dirIMG):
-                return
-            #--------------------------------------------------------------------------------------
-            if pagina > 1:
-                pyperclip.copy(pagina)
-                pyautogui.hotkey('ctrl','v')
-                pyautogui.press('enter')
-            #------------------------------------------------------------------
-            if CreatedTools.FindImage('alertaOK_ICS.png',0,0,"click",3,dirIMG):
-                break 
-            if not CreatedTools.FindImage('guiaCarregada_ICS.png',0,0,"click",20,dirIMG):
-                return   
+            if pagina <= PAGINAS:
+                pyautogui.press('pagedown',presses=3)
+                if not CreatedTools.FindImage('operacoesCAF\\irParaPagina.png',-70,0,"click",3,dirIMG):
+                    return
+                #--------------------------------------------------------------------------------------
+                if pagina > 1:
+                    pyperclip.copy(pagina)
+                    pyautogui.hotkey('ctrl','v')
+                    pyautogui.press('enter')
+                #------------------------------------------------------------------
+                if CreatedTools.FindImage('alertaOK_ICS.png',0,0,"click",3,dirIMG):
+                    break 
+                if not CreatedTools.FindImage('guiaCarregada_ICS.png',0,0,"click",20,dirIMG):
+                    return   
             #--------------------------------------------------------------------------------------
             if not CreatedTools.FindImage('operacoesCAF\\pagina50linhas.png',0,0,"click",3,dirIMG):
                 return
@@ -246,24 +230,14 @@ def ListarArquivosRecentes(TEMPO_MODIFICACAO="00:00:00",DIAS_MODIFICACAO=0,DIRET
     data_atual = datetime.datetime.now()
     horasMod, minutosMod, segundosMod = map(float, TEMPO_MODIFICACAO.split(':'))
     data_limiteModificacao = data_atual - datetime.timedelta(days=DIAS_MODIFICACAO,hours=int(horasMod),minutes=int(minutosMod),seconds=int(segundosMod))
-    print(f'{data_limiteModificacao} -- data_limiteModificacao')
-    #------------------------------------------------------------------------------------------------------------------------------------
-    while True:
-        for nomeArquivo in os.listdir(DIRETORIO):
-            caminho_completo = os.path.join(DIRETORIO, nomeArquivo)    
-            if os.path.isfile(caminho_completo):
-                data_modificacao = datetime.datetime.fromtimestamp(os.path.getmtime(caminho_completo))
-                #---------------------------------------------------------------------------------------
-                if data_modificacao >= data_limiteModificacao:
-                    arquivosRecentes_list.append(str(caminho_completo))
-            else:
-                print(f'{caminho_completo} não encontrado')
-        #-------------------------------------------------------------------------------------------------    
-        if any(nome.lower().endswith('.crdownload') for nome in os.listdir(DIRETORIO)):
-            print("Arquivos .crdownload encontrados. Aguardando 10 segundos antes de listar novamente.")
-            time.sleep(10)
-        else:
-            break
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    for nomeArquivo in os.listdir(DIRETORIO):
+        caminho_completo = os.path.join(DIRETORIO, nomeArquivo)    
+        if os.path.isfile(caminho_completo):
+            data_modificacao = datetime.datetime.fromtimestamp(os.path.getmtime(caminho_completo))
+            #---------------------------------------------------------------------------------------
+            if data_modificacao >= data_limiteModificacao:
+                arquivosRecentes_list.append(str(caminho_completo))
     #-------------------------------------------------------------------------------------------------
     return arquivosRecentes_list       
       
@@ -290,7 +264,7 @@ def DescompactarArquivos(DIRETORIOS_LISTA=[],LISTAR_NAO_DESCOMPACTADOS=False, DE
                     #--------------------------------------------------------------------------------
                     arquivosDescompactados_list.append(arquivoDescompactado_dir)
                     #-----------------------------------------------------------
-                    #arquivosCompactados_list.remove(caminho_arquivo)
+                    arquivosCompactados_list.remove(caminho_arquivo)
                     arquivosParaDeletar_list.append(caminho_arquivo)
         #----------------------------------------------------------------------------------------------
         elif caminho_arquivo.lower().endswith('.rar'):
@@ -304,7 +278,7 @@ def DescompactarArquivos(DIRETORIOS_LISTA=[],LISTAR_NAO_DESCOMPACTADOS=False, DE
                     #--------------------------------------------------------------------------------
                     arquivosDescompactados_list.append(arquivoDescompactado_dir)
                     #-----------------------------------------------------------
-                    #arquivosCompactados_list.remove(caminho_arquivo)
+                    arquivosCompactados_list.remove(caminho_arquivo)
                     arquivosParaDeletar_list.append(caminho_arquivo)
     #------------------------------------------------------------------------------------------------
     if LISTAR_NAO_DESCOMPACTADOS:
@@ -348,9 +322,7 @@ def ConcatenarArquivosParaDF(DIRETORIOS_LISTA=[]):
          
        
 
-def RelatorioTotalExpress(DATA_INICIO='01-01-2001',DATA_FINAL='01-01-2031',QTD_LOTE_CAFS=300,PAGINAS_CAF=2,DIRETORIO=cafsIcsDrive_dir):
-    DATA_INICIO = pd.to_datetime(DATA_INICIO, format='%d-%m-%Y')
-    DATA_FINAL = pd.to_datetime(DATA_FINAL, format='%d-%m-%Y')
+def RelatorioTotalExpress(DATA_INICIO='2001-01-01',DATA_FINAL='2031-01-01',QTD_LOTE_CAFS=300,PAGINAS_CAF=30,DIRETORIO=cafsIcsDrive_dir):
     def TempoDeExecucao():
         if not hasattr(TempoDeExecucao, 'inicioDaExecucao'):
             TempoDeExecucao.inicioDaExecucao = datetime.datetime.now()
@@ -358,49 +330,39 @@ def RelatorioTotalExpress(DATA_INICIO='01-01-2001',DATA_FINAL='01-01-2031',QTD_L
         diferencaDeTempo = datetime.datetime.now() - TempoDeExecucao.inicioDaExecucao
         tempoDeExecucao_time = str(diferencaDeTempo)
         #-------------------------------------------
-        print(f'{tempoDeExecucao_time} tempoDeExecucao_time')
         return tempoDeExecucao_time
     TempoDeExecucao()
     #-----------------------------------------------------------------------------------------------------------------------
-    try:
-        CreatedTools.funcionVBA('TratarColunasDeNumeros',DIRETORIO)
-    except:
-        print('Erro ao executar o codigo VBA: TratarColunasDeNumeros')
-    #-----------------------------------------------------------------------------------------------------------------------
-    
     paginas = PAGINAS_CAF
     for baseOp in ['PFD','CSX']:
         LoginICS(baseOp) 
         #------------------------------
-        ExportarOperacaoCafs(1,paginas) 
-    ''''''
+        ExportarOperacaoCafs(1,paginas)  
     #-----------------------------------------------------------------------------------------------------------------------  
-    
+    CreatedTools.funcionVBA('TratarColunasDeNumeros',DIRETORIO)
     if os.path.isfile(DIRETORIO):
         df_cafs = pd.read_excel(DIRETORIO)
     else:
-       df_cafs = pd.DataFrame() 
-    #-----------------------------------------------------------------------------------------------------------------------   
-    
-    print(df_cafs['Data de Abertura'].dtypes)
-    
-    if pd.api.types.is_integer_dtype(df_cafs['Data de Abertura']) or pd.api.types.is_float_dtype(df_cafs['Data de Abertura']):
-        df_cafs['Data de Abertura'] = pd.to_datetime(df_cafs['Data de Abertura'] - 2,origin='1900-01-01', unit='D',errors='coerce')  
-    else:
-        print('----> Data de Abertura está com formato errado!')     
+        df_cafs = pd.DataFrame() 
     #-----------------------------------------------------------------------------------------------------------------------
-    cafsFiltradas = df_cafs
+    def tentar_formatos(data):
+        formatos = ['%d/%m/%Y', '%Y-%m-%d %H:%M:%S']  
+        for formato in formatos:
+            try:
+                return pd.to_datetime(data, format=formato)
+            except ValueError:
+                pass
+        
+    #----------------------------------------------------------------------------------
+    df_cafs['Data de Abertura'] = df_cafs['Data de Abertura'].apply(tentar_formatos)
+    #-----------------------------------------------------------------------------------------------------------------------
     cafsFiltradas = df_cafs[(df_cafs['Data de Abertura'] >= DATA_INICIO) & (df_cafs['Data de Abertura'] <= DATA_FINAL)]
     print(f'---->CAFs para baixar: {len(cafsFiltradas)}')
     #-----------------------------------------------------------------------------------------------------------------------
     LoginICS('Gerencial')
     cafsBaixadas = 0
-    #-----------------------------------------------------------------------------------------------------------------------
-    cafNaoEncontradas = []
-    lista_caf_baixar = cafsFiltradas
-    #for lista_caf_baixar in [cafsFiltradas, cafNaoEncontradas]:
-    for i in range(0,len(lista_caf_baixar),QTD_LOTE_CAFS):
-        selecaoLoteCafs = lista_caf_baixar[i:i+QTD_LOTE_CAFS]
+    for i in range(0,len(cafsFiltradas),QTD_LOTE_CAFS):
+        selecaoLoteCafs = cafsFiltradas[i:i+QTD_LOTE_CAFS]
         selecaoLoteCafs = selecaoLoteCafs['C.A.F.']
         texto_da_coluna = selecaoLoteCafs.to_string(index=False)
         pyperclip.copy(texto_da_coluna)
@@ -409,17 +371,11 @@ def RelatorioTotalExpress(DATA_INICIO='01-01-2001',DATA_FINAL='01-01-2031',QTD_L
         print(f'CAFs Baixadas: {cafsBaixadas}')
     #-----------------------------------------------------------------------------------------------------------------------
     arquivosbaixados_list = ListarArquivosRecentes(TEMPO_MODIFICACAO=TempoDeExecucao(),DIRETORIO=download_dir)
-    print(f'arquivosbaixados:{arquivosbaixados_list}')
     #-----------------------------------------------------------------------------------------------------------------------
     arquivosDescompactados_list = DescompactarArquivos(arquivosbaixados_list)
-    print(f'arquivosDescompactados{arquivosDescompactados_list}')
     #-----------------------------------------------------------------------------------------------------------------------
     relatorioTotalBaixado_df = ConcatenarArquivosParaDF(arquivosDescompactados_list)
     arquivosbaixados_list = ListarArquivosRecentes(TEMPO_MODIFICACAO=TempoDeExecucao(),DIRETORIO=download_dir)
-    #-----------------------------------------------------------------------------------------------------------------------
-    
-        
-    #-----------------------------------------------------------------------------------------------------------------------
     relatorioTotalBaixado_df.to_excel(f'{download_dir}\\relatorioTotalFinal.xlsx')
     #-----------------------------------------------------------------------------------------------------------------------
     #Filtrar Status
@@ -431,7 +387,7 @@ def RelatorioTotalExpress(DATA_INICIO='01-01-2001',DATA_FINAL='01-01-2031',QTD_L
 
 
 
-SelectCheckBox()
-#RelatorioTotalExpress(DATA_INICIO='20-11-2023',DATA_FINAL='15-12-2023',PAGINAS_CAF=30)
-#ExportarOperacaoCafs(1,40)
+#SelectCheckBox()
+RelatorioTotalExpress(DATA_INICIO='2023-10-24',DATA_FINAL='2023-11-15',PAGINAS_CAF=2)
+#ExportarOperacaoCafs(1,30)
 
