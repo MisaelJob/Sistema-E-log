@@ -91,22 +91,30 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",attempts=4,imageFolder=
 
 
 
-def funcionVBA(FUNCTION_NAME, DIRETORIO):
+import xlwings as xw
+
+def funcionVBA(FUNCTION_NAME, DIRETORIO, *args):
     try:
         app = xw.apps.active
-        arquivoExcel = app.books.active
-        arquivoExcel.macro(FUNCTION_NAME).run()
-    except Exception as e:
-        #---------------------------------------------------------
+        #----------------------------------------
+        if not DIRETORIO == "":
+            arquivoExcel = xw.Book(DIRETORIO)
+        else:
+            arquivoExcel = app.books.active
+        #----------------------------------------
+        arquivoExcel.macro(FUNCTION_NAME).run(*args)
+        #----------------------------------------
         if not DIRETORIO == "":
             try:
-                arquivoExcel = xw.Book(DIRETORIO)
-                arquivoExcel.macro(FUNCTION_NAME).run()
                 arquivoExcel.save()
                 arquivoExcel.app.quit()
-            except Exception:
-                pass
-  
+            except Exception as e:
+                print(f'Erro ao salvar e fechar o arquivo: {e}')
+    except Exception as e:
+        print(f'Erro ao executar função {FUNCTION_NAME}: {e}')
+
+
+
 
 
 def cttName(name):

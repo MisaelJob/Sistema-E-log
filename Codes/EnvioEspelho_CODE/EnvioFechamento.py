@@ -66,7 +66,7 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
         #******************************************************************************************************************
         elif CreatedTools.ArchiveType(arquivo) == "espelho":
             try:
-                CreatedTools.funcionVBA('selecionarEspelho', nomeEspelho_tabEnvio, tipoPagamento_tabEnvio)
+                CreatedTools.funcionVBA('selecionarEspelho',"",nomeEspelho_tabEnvio, tipoPagamento_tabEnvio)
             except:
                 errorsCount = errorsCount + 1
                 if errorsCount >= maxErrors:
@@ -256,7 +256,7 @@ def chamarFuncoesEnvio():
     arquivo = "ESPELHO"
     #mensagemPronta = "🚨🚀Descubra a revolução nas entregas! 🚚 O app agileGo já está disponível na Play Store! 📲✨\n\nFaça o download agora e aproveite:\n\n🌟 Valores de bônus semanais que vão te surpreender!\n📣 Bônus incríveis por indicação de amigos.\n💰 Valores agressivos por entrega (70%), garantindo o seu bolso cheio!\n🎉 Brindes para os primeiros a se cadastrar e carregar, e muito mais.\n\nNão perca tempo, junte-se à equipe agileGo e ganhe mais a cada entrega.\n\nBaixe agora em https://play.google.com/store/apps/details?id=br.com.agilego e comece a lucrar! 💵💼\n\nSaiba mais: www.agilego.com.br"
 
-    mensagemPronta = "Segue *primeira* quinzena de *Novembro.*\n\nAlgumas CAFs não estavam aparecendo após manutenção do sistema da TOTAL EXPRESS, favor considerar apenas o ultimo envio."
+    mensagemPronta = "Segue *PRIMEIRA* quinzena de *DEZEMBRO.*\n\n⚠️Pagamento dia 15/01, leia as informações!"
     
     #if executarEm_hora_minuto(18,15):      
     
