@@ -91,6 +91,7 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
                     pyautogui.hotkey('ctrl','v')
                     pyautogui.press('enter')
             #------------------------------------------------------------------------------------------------
+            """"
             if somaDescontos_tabEnvio > 0:
                 try:    
                     CreatedTools.funcionVBA('FiltroOutrosRelatorios')
@@ -128,6 +129,7 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
                     time.sleep(0.5)
                     #-------------------------------------------------
                     pyautogui.press('enter')          
+        """
         #************************************************************************************************************
         elif CreatedTools.ArchiveType(arquivo) == "arquivo":
             if not CreatedTools.FindImage('chatAnexar_wtt.png'):
@@ -191,7 +193,7 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
         else:
             CreatedTools.FindImage('iconesChat_wtt.png',100)
             #----------------------------------------------------
-            mensagemDeEnvio = f"Olá {nomeContato_tabEnvio}?\n" + mensagem
+            mensagemDeEnvio = f"Olá {nomeContato_tabEnvio}? R${totalEspelho_tabEnvio}\n" + mensagem
             pyperclip.copy(mensagemDeEnvio)
             pyautogui.hotkey('ctrl','v')
             pyautogui.press('enter')
@@ -214,7 +216,7 @@ def publicarResultados(arquivo,contato):
     tabelaDeEnvio_dt = pd.read_excel(tabelaDeEnvio_dir)
     
     resultadoEnvios = tabelaDeEnvio_dt['STATUS'].value_counts()
-    resultadoMensagem = f"🤖 *MISATRON 2.2* \n\nOlá {contato} o envido de *{arquivo}* foi finalizado, resultado:\n\nErros       {errorsCount}\n{resultadoEnvios} \n\n Tomem cuidado, estou sendo atualizado! 😎"
+    resultadoMensagem = f"🤖 *MISATRON 2.2* \n\nOlá {contato} o envido de *{arquivo}* foi finalizado, resultado:\n\nErros       {errorsCount}\n{resultadoEnvios} \n\n Sentiram minha falta?"
     #-----------------------------------------------------------------
     if CreatedTools.ProcurarContato_wtt(contato):
         pyperclip.copy(resultadoMensagem)
@@ -253,10 +255,11 @@ def executarEm_hora_minuto(hora, minuto):
 
 
 def chamarFuncoesEnvio():
-    arquivo = "ESPELHO"
+    arquivo = "Ajustes proxima Quinzena"
+    #arquivo = "ESPELHO"
     #mensagemPronta = "🚨🚀Descubra a revolução nas entregas! 🚚 O app agileGo já está disponível na Play Store! 📲✨\n\nFaça o download agora e aproveite:\n\n🌟 Valores de bônus semanais que vão te surpreender!\n📣 Bônus incríveis por indicação de amigos.\n💰 Valores agressivos por entrega (70%), garantindo o seu bolso cheio!\n🎉 Brindes para os primeiros a se cadastrar e carregar, e muito mais.\n\nNão perca tempo, junte-se à equipe agileGo e ganhe mais a cada entrega.\n\nBaixe agora em https://play.google.com/store/apps/details?id=br.com.agilego e comece a lucrar! 💵💼\n\nSaiba mais: www.agilego.com.br"
 
-    mensagemPronta = "Segue *PRIMEIRA* quinzena de *DEZEMBRO.*\n\n⚠️Pagamento dia 15/01, leia as informações!"
+    mensagemPronta = "Valor acima será incluso no proximo fechamento em (VALORES EXTRAS), referente a correção do VALOR ACORDADO POR ENTREGA dessa 2°Q JANEIRO."
     
     #if executarEm_hora_minuto(18,15):      
     

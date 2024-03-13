@@ -49,7 +49,7 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",attempts=4,imageFolder=
             pesquisa_wtt_posX = None 
             pesquisa_wtt_posY = None
             #----------------------
-            time.sleep(1)
+            time.sleep(0.5)
             #--------------------------------------------------------------------------------    
             if not os.path.exists(img):
                 
