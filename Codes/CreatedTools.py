@@ -36,25 +36,31 @@ rootFolder_dir = RootFolder()
 def FindImage(imageName,posX = 0,posY = 0,action="click",attempts=4,imageFolder=f"{rootFolder_dir}/Codes/EnvioEspelho_CODE/images/{resolution}"):
     ultimoPontoImageName = str(imageName).rfind('.')
     nomeImgSemTipo = imageName[0:ultimoPontoImageName]
+    enderecoImagem_list = [f'{imageFolder}\\{imageName}']
     #-------------------------------------------------------------------------
-    enderecoImagem_list = list(Path(imageFolder).glob(f"{nomeImgSemTipo}(*)"))
-    enderecoImagem_list.append(f'{imageFolder}\\{imageName}')
-    #-------------------------------------------------------------------------
-    pesquisa_wtt_posX = None 
-    pesquisa_wtt_posY = None
-    returnValue = False
+    #enderecoImagem_list.append(f'{imageFolder}\\{imageName}')
+    arqSecundarios_list = list(Path(imageFolder).glob(f"{nomeImgSemTipo}(*"))
+    enderecoImagem_list += arqSecundarios_list   
     #-------------------------------------------------------------------------
     for attempt in range(1, int(attempts)+1, 1):
-        time.sleep(1)
-        #--------------------------------------------------------------------------------------------------------
         for img in enderecoImagem_list:
-            try:
-                pesquisa_wtt_posX, pesquisa_wtt_posY = pyautogui.locateCenterOnScreen(str(img), confidence=0.85)
-            except:
+            returnValue = False
+            #-----------------------
+            pesquisa_wtt_posX = None 
+            pesquisa_wtt_posY = None
+            #----------------------
+            time.sleep(1)
+            #--------------------------------------------------------------------------------    
+            if not os.path.exists(img):
+                
                 continue
-            #----------------------------------------------------------------------------------------------------
-            if pesquisa_wtt_posX != None:
-                break
+            #----------------------------------------------------------
+            try:
+                pesquisa_wtt_posX, pesquisa_wtt_posY = pyautogui.locateCenterOnScreen(str(img), confidence=0.9)
+                if pesquisa_wtt_posX != None:
+                    break
+            except:
+                pass
         #-------------------------------------------------
         if pesquisa_wtt_posX != None:
             pesquisa_wtt_posX = pesquisa_wtt_posX + posX
@@ -65,12 +71,13 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",attempts=4,imageFolder=
                 continue
             #--------------------------------------------------------
             elif action == "click":
-                pyautogui.click(pesquisa_wtt_posX,pesquisa_wtt_posY)
+                pyautogui.moveTo(x=pesquisa_wtt_posX,y=pesquisa_wtt_posY,duration=0.3)
+                pyautogui.click(x=pesquisa_wtt_posX,y=pesquisa_wtt_posY)
                 returnValue = True
                 break
             #--------------------------------------------------------
             elif action == "moveTo":
-                pyautogui.moveTo(pesquisa_wtt_posX,pesquisa_wtt_posY)
+                pyautogui.moveTo(x=pesquisa_wtt_posX,y=pesquisa_wtt_posY)
                 returnValue = True
                 break
             #--------------------------------------------------------
@@ -78,7 +85,7 @@ def FindImage(imageName,posX = 0,posY = 0,action="click",attempts=4,imageFolder=
                 continue   
         #-------------------------------------------------------------
     if returnValue == False:
-        #print(f'----------> Imagem {imageName}, não encontrada.')
+        print(f'----------> Imagem {imageName}, não encontrada.')
         pass
     return returnValue
 
@@ -270,19 +277,30 @@ def valido(variavel):
 
 
 def SavarDataFrameEmExcel(DATA_FRAME, DIRETORIO):
-    try:
-        funcionVBA('SimplificarDados',DIRETORIO)
-    except:
-        print('Erro ao executar o codigo VBA: SimplificarDados')
-    #----------------------------------------------------------------------------------------------------------------
+    print("Save")
     try:
         funcionVBA('TratarColunasDeNumeros',DIRETORIO)
     except:
-        print('Erro ao executar o codigo VBA: SimplificarDados')
+        print('Erro ao executar o codigo VBA: TratarColunasDeNumeros')
     #----------------------------------------------------------------------------------------------------------------
-    df = DATA_FRAME
+    # Remove coluna de índices
+    df = DATA_FRAME.reset_index(drop=True)
+
+    # Remove colunas com nomes vazios ou começando com "Unnamed"
+    df = df.loc[:, ~df.columns.str.match('Unnamed')]
+    colunas_para_remover = [coluna for coluna in df.columns if coluna.startswith('Unnamed') or pd.isna(coluna)]
+    df = df.drop(columns=colunas_para_remover)
     #----------------------------------------------------------------------------------------------------------------
+    app = xw.App()
+    try:
+        wb = app.books.open(DIRETORIO)
+    except:
+        wb = app.books.add()
+    sheet = wb.sheets[0]
+    #----------------------------------------------------------------------------------------------------------------
+    '''
     for coluna in df.columns:
+        
         if coluna == 'Data de Abertura':
             df[coluna] = df[coluna].str.replace(r'\s+', '', regex=True)
             #-----------------------------------------------------------
@@ -315,27 +333,29 @@ def SavarDataFrameEmExcel(DATA_FRAME, DIRETORIO):
             df[coluna] = df[coluna].astype(str)
         elif pd.api.types.is_object_dtype(df[coluna]) and isinstance(df.iloc[0][coluna], datetime.time):
             df[coluna] = df[coluna].apply(lambda x: x.strftime('%H:%M:%S') if isinstance(x, datetime.time) else x)
-    #----------------------------------------------------------------------------------------------------------------
-    app = xw.App()
+        '''
+        #-----------------------------------------------------------------------------------------------------------------
+      
     #----------------------------------------------------------------------------------------------------------------
     if not df.empty:
-        try:
-            wb = app.books.open(DIRETORIO)
-        except:
-            wb = app.books.add()
         #-------------------------------------------
-        sheet = wb.sheets[0]
+        sheet.range('A1:BZ999888').clear_contents()
         sheet.range('a1').value = df
-        sheet.range('A:A').api.EntireColumn.Delete()
+        #-------------------------------------------
+       
+        # Obtém os nomes das colunas da planilha
+        nomes_colunas = sheet.range((1, 1), (1, sheet.api.UsedRange.Columns.Count)).value
+
+        # Verifica se o primeiro nome de coluna está vazio ou começa com "Unnamed"
+        if not nomes_colunas[0] or nomes_colunas[0].startswith("Unnamed"):
+            # Remove a primeira coluna da planilha
+            sheet.api.Columns(1).Delete()
+        
         #-------------------------------------------
         wb.save()
+        wb.close()
         app.quit()
         #-------------------------------------------
-        try:
-            funcionVBA('SimplificarDados',DIRETORIO)
-        except:
-            print('Erro ao executar o codigo VBA: SimplificarDados')
-        #------------------------------------------------------------
         try:
             funcionVBA('TratarColunasDeNumeros',DIRETORIO)
         except:
@@ -362,8 +382,16 @@ def DeletarArquivo(FILE_PATH,TEMPO_MAXIMO=300):
                 arquivoEmUso = False
         #------------------------------------------------------------------------------
         if not arquivoEmUso:
+            break
+    #------------------------------------------------------------------------------
+    try:
+        if not arquivoEmUso:
             os.remove(FILE_PATH)
             return True
+    except FileNotFoundError:
+        print(f"Arquivo não encontrado: {FILE_PATH}")
+    except:
+        print(f"Erro ao tentar Deletar: {FILE_PATH}")
     #----------------------------------------------------------------------------------
 
 
