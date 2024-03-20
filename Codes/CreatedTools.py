@@ -253,6 +253,8 @@ def ArchiveType(arquivo):
         resposta = "archive"
     elif arquivo.find("espelho") != -1 or arquivo.find("fechamento") != -1:
         resposta = "espelho"
+    elif arquivo.find("prev") != -1 or arquivo.find("previa") != -1:
+        resposta = "espelho"
     #----------------------------------------------------
     if resposta:
         #print(f'----------> Arquivo {arquivo}, encontrada com sucesso.')

@@ -66,7 +66,7 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
         #******************************************************************************************************************
         elif CreatedTools.ArchiveType(arquivo) == "espelho":
             try:
-                CreatedTools.funcionVBA('selecionarEspelho',"",nomeEspelho_tabEnvio, tipoPagamento_tabEnvio)
+                CreatedTools.funcionVBA('selecionarEspelho',"",nomeEspelho_tabEnvio)
             except:
                 errorsCount = errorsCount + 1
                 if errorsCount >= maxErrors:
@@ -92,45 +92,36 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
                     pyautogui.press('enter')
             #------------------------------------------------------------------------------------------------
             """"
-            if somaDescontos_tabEnvio > 0:
-                try:    
-                    CreatedTools.funcionVBA('FiltroOutrosRelatorios')
-                except:
+            removido
+            """
+        #************************************************************************************************************
+        elif CreatedTools.ArchiveType(arquivo) == "prev":
+            try:
+                CreatedTools.funcionVBA('selecionarEspelho',"",nomeEspelho_tabEnvio,"prev")
+            except:
+                errorsCount = errorsCount + 1
+                if errorsCount >= maxErrors:
+                    break
+                if comentarios:
+                    print("----------> Erro ao selecionar espelho!")
+                continue 
+                #-----------------------------
+            else:
+                time.sleep(4)
+                if not CreatedTools.FindImage('iconesChat_wtt.png'):
                     errorsCount = errorsCount + 1
                     if errorsCount >= maxErrors:
                         break
                     if comentarios:
-                        print("----------> Erro no filtro de relatorios extras/extravios!")
-                    continue 
+                        print("----------> Botões do chat não encontrados!")
+                    continue
                     #-----------------------------
                 else:
-                    time.sleep(4)
-                    if not CreatedTools.FindImage('iconesChat_wtt.png'):
-                        errorsCount = errorsCount + 1
-                        if errorsCount >= maxErrors:
-                            break
-                        if comentarios:
-                            print("----------> Botões do chat não encontrados!")
-                        continue
-                        #-----------------------------
-                    else:
-                        pyautogui.moveRel(100, 0, duration=0.25)
-                        pyautogui.click()
-                        pyautogui.hotkey('ctrl','v')
-                        #------------------------------------------------
-                        pyperclip.copy("*Relatório de descontos aplicados:*\n Questionamento quanto à aplicação de extravios, multas ou divergência de descontos você deve contatar o GRIS, através do Supervisor *RAFAEL* no fone: wa.me/555197242536.")
-                        pyautogui.hotkey('ctrl','v')
-                        time.sleep(0.5)
-                        #-------------------------------------------------
-                        pyautogui.press('enter')
-                if totalEspelho_tabEnvio < 0:
-                    pyperclip.copy(f"⚠️Atenção seus pagamentos podem estar bloqueados por razão de seu espelho estar com valor negativo de {totalEspelho_tabEnvio}!")
+                    pyautogui.moveRel(100, 0, duration=0.25)
+                    pyautogui.click()
                     pyautogui.hotkey('ctrl','v')
-                    time.sleep(0.5)
-                    #-------------------------------------------------
-                    pyautogui.press('enter')          
-        """
-        #************************************************************************************************************
+                    pyautogui.press('enter')
+        #************************************************************************************************************          
         elif CreatedTools.ArchiveType(arquivo) == "arquivo":
             if not CreatedTools.FindImage('chatAnexar_wtt.png'):
                 errorsCount = errorsCount + 1
@@ -257,8 +248,8 @@ def executarEm_hora_minuto(hora, minuto):
 
 def chamarFuncoesEnvio():
    
-    arquivo = "ESPELHO"
-    #mensagemPronta = "🚨🚀Descubra a revolução nas entregas! 🚚 O app agileGo já está disponível na Play Store! 📲✨\n\nFaça o download agora e aproveite:\n\n🌟 Valores de bônus semanais que vão te surpreender!\n📣 Bônus incríveis por indicação de amigos.\n💰 Valores agressivos por entrega (70%), garantindo o seu bolso cheio!\n🎉 Brindes para os primeiros a se cadastrar e carregar, e muito mais.\n\nNão perca tempo, junte-se à equipe agileGo e ganhe mais a cada entrega.\n\nBaixe agora em https://play.google.com/store/apps/details?id=br.com.agilego e comece a lucrar! 💵💼\n\nSaiba mais: www.agilego.com.br"
+    arquivo = "prev"
+    
 
     mensagemPronta = "Espelho referete ao fechamento de entregas da *primeira* quinzena de *FEVEREIRO* \n\n⚠️É contabilizada a entrega na data da finalização, não na data de criação do romaneio, por isso, um romaneio/CAF pode ter entregas em dois fechamentos."
     
@@ -270,6 +261,57 @@ def chamarFuncoesEnvio():
  
     
 chamarFuncoesEnvio()
+
+
+
+
+
+
+
+
+
+
+
+
+""""
+            if somaDescontos_tabEnvio > 0:
+                try:    
+                    CreatedTools.funcionVBA('FiltroOutrosRelatorios')
+                except:
+                    errorsCount = errorsCount + 1
+                    if errorsCount >= maxErrors:
+                        break
+                    if comentarios:
+                        print("----------> Erro no filtro de relatorios extras/extravios!")
+                    continue 
+                    #-----------------------------
+                else:
+                    time.sleep(4)
+                    if not CreatedTools.FindImage('iconesChat_wtt.png'):
+                        errorsCount = errorsCount + 1
+                        if errorsCount >= maxErrors:
+                            break
+                        if comentarios:
+                            print("----------> Botões do chat não encontrados!")
+                        continue
+                        #-----------------------------
+                    else:
+                        pyautogui.moveRel(100, 0, duration=0.25)
+                        pyautogui.click()
+                        pyautogui.hotkey('ctrl','v')
+                        #------------------------------------------------
+                        pyperclip.copy("*Relatório de descontos aplicados:*\n Questionamento quanto à aplicação de extravios, multas ou divergência de descontos você deve contatar o GRIS, através do Supervisor *RAFAEL* no fone: wa.me/555197242536.")
+                        pyautogui.hotkey('ctrl','v')
+                        time.sleep(0.5)
+                        #-------------------------------------------------
+                        pyautogui.press('enter')
+                if totalEspelho_tabEnvio < 0:
+                    pyperclip.copy(f"⚠️Atenção seus pagamentos podem estar bloqueados por razão de seu espelho estar com valor negativo de {totalEspelho_tabEnvio}!")
+                    pyautogui.hotkey('ctrl','v')
+                    time.sleep(0.5)
+                    #-------------------------------------------------
+                    pyautogui.press('enter')          
+        """
 
 
 
