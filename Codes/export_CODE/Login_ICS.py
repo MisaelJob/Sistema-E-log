@@ -194,13 +194,6 @@ def ExportarOperacaoCafs(INICIO=1,PAGINAS=3, REPOSITORIO = cafsIcsDrive_dir ,FEC
             table = soup.find('table', {'id': 'tabela'})
             if table is not None:
                 df_temp = pd.read_html(str(table))[0]
-                
-                df_temp['Data de Abertura'] = df_temp['Data de Abertura'].astype(str)
-                df_temp['Data de Abertura'] = df_temp['Data de Abertura'].str.replace(" ","").str.replace("/","-")
-                
-                df_temp['Data de Abertura'] = pd.to_datetime(df_temp['Data de Abertura'], format='%d-%m-%Y')
-                
-                print(df_temp['Data de Abertura'].dtype)
                 #---------------------------------------
                 if filtro == 'selecioanarAndamento.png':
                     df_temp['STATUS'] = 'EmAndamento'
@@ -374,13 +367,13 @@ def RelatorioTotalExpress(DATA_INICIO='01-01-2001',DATA_FINAL='01-01-2031',QTD_L
     except:
         print('Erro ao executar o codigo VBA: TratarColunasDeNumeros')
     #-----------------------------------------------------------------------------------------------------------------------
-    '''
+    
     paginas = PAGINAS_CAF
     for baseOp in ['PFD','CSX']:
         LoginICS(baseOp) 
         #------------------------------
         ExportarOperacaoCafs(1,paginas) 
-    '''
+    ''''''
     #-----------------------------------------------------------------------------------------------------------------------  
     
     if os.path.isfile(DIRETORIO):
@@ -388,6 +381,9 @@ def RelatorioTotalExpress(DATA_INICIO='01-01-2001',DATA_FINAL='01-01-2031',QTD_L
     else:
        df_cafs = pd.DataFrame() 
     #-----------------------------------------------------------------------------------------------------------------------   
+    
+    print(df_cafs['Data de Abertura'].dtypes)
+    
     if pd.api.types.is_integer_dtype(df_cafs['Data de Abertura']) or pd.api.types.is_float_dtype(df_cafs['Data de Abertura']):
         df_cafs['Data de Abertura'] = pd.to_datetime(df_cafs['Data de Abertura'] - 2,origin='1900-01-01', unit='D',errors='coerce')  
     else:
@@ -396,14 +392,13 @@ def RelatorioTotalExpress(DATA_INICIO='01-01-2001',DATA_FINAL='01-01-2031',QTD_L
     cafsFiltradas = df_cafs
     cafsFiltradas = df_cafs[(df_cafs['Data de Abertura'] >= DATA_INICIO) & (df_cafs['Data de Abertura'] <= DATA_FINAL)]
     print(f'---->CAFs para baixar: {len(cafsFiltradas)}')
-    #3641
     #-----------------------------------------------------------------------------------------------------------------------
     LoginICS('Gerencial')
     cafsBaixadas = 0
     #-----------------------------------------------------------------------------------------------------------------------
-    
+    cafNaoEncontradas = []
     lista_caf_baixar = cafsFiltradas
-    
+    #for lista_caf_baixar in [cafsFiltradas, cafNaoEncontradas]:
     for i in range(0,len(lista_caf_baixar),QTD_LOTE_CAFS):
         selecaoLoteCafs = lista_caf_baixar[i:i+QTD_LOTE_CAFS]
         selecaoLoteCafs = selecaoLoteCafs['C.A.F.']
@@ -437,6 +432,6 @@ def RelatorioTotalExpress(DATA_INICIO='01-01-2001',DATA_FINAL='01-01-2031',QTD_L
 
 
 SelectCheckBox()
-#RelatorioTotalExpress(DATA_INICIO='06-11-2023',DATA_FINAL='15-12-2023',PAGINAS_CAF=30)
-#ExportarOperacaoCafs(1,50)
+#RelatorioTotalExpress(DATA_INICIO='20-11-2023',DATA_FINAL='15-12-2023',PAGINAS_CAF=30)
+#ExportarOperacaoCafs(1,40)
 
