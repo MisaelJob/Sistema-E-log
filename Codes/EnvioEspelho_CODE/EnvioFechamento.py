@@ -193,7 +193,8 @@ def EnvioMensagem_wtt(mensagem,arquivo=""):
         else:
             CreatedTools.FindImage('iconesChat_wtt.png',100)
             #----------------------------------------------------
-            mensagemDeEnvio = f"Olá {nomeContato_tabEnvio}? R${totalEspelho_tabEnvio}\n" + mensagem
+            
+            mensagemDeEnvio = f"Olá {nomeContato_tabEnvio}? \n{mensagem} \n Total de R${totalEspelho_tabEnvio}\n" 
             pyperclip.copy(mensagemDeEnvio)
             pyautogui.hotkey('ctrl','v')
             pyautogui.press('enter')
@@ -216,7 +217,7 @@ def publicarResultados(arquivo,contato):
     tabelaDeEnvio_dt = pd.read_excel(tabelaDeEnvio_dir)
     
     resultadoEnvios = tabelaDeEnvio_dt['STATUS'].value_counts()
-    resultadoMensagem = f"🤖 *MISATRON 2.2* \n\nOlá {contato} o envido de *{arquivo}* foi finalizado, resultado:\n\nErros       {errorsCount}\n{resultadoEnvios} \n\n Sentiram minha falta?"
+    resultadoMensagem = f"🤖 *MISATRON 2.2* \n\nOlá {contato} o envido de *{arquivo}* foi finalizado, resultado:\n\nErros       {errorsCount}\n{resultadoEnvios}"
     #-----------------------------------------------------------------
     if CreatedTools.ProcurarContato_wtt(contato):
         pyperclip.copy(resultadoMensagem)
@@ -255,11 +256,11 @@ def executarEm_hora_minuto(hora, minuto):
 
 
 def chamarFuncoesEnvio():
-    arquivo = "Ajustes proxima Quinzena"
-    #arquivo = "ESPELHO"
+   
+    arquivo = "ESPELHO"
     #mensagemPronta = "🚨🚀Descubra a revolução nas entregas! 🚚 O app agileGo já está disponível na Play Store! 📲✨\n\nFaça o download agora e aproveite:\n\n🌟 Valores de bônus semanais que vão te surpreender!\n📣 Bônus incríveis por indicação de amigos.\n💰 Valores agressivos por entrega (70%), garantindo o seu bolso cheio!\n🎉 Brindes para os primeiros a se cadastrar e carregar, e muito mais.\n\nNão perca tempo, junte-se à equipe agileGo e ganhe mais a cada entrega.\n\nBaixe agora em https://play.google.com/store/apps/details?id=br.com.agilego e comece a lucrar! 💵💼\n\nSaiba mais: www.agilego.com.br"
 
-    mensagemPronta = "Valor acima será incluso no proximo fechamento em (VALORES EXTRAS), referente a correção do VALOR ACORDADO POR ENTREGA dessa 2°Q JANEIRO."
+    mensagemPronta = "Espelho referete ao fechamento de entregas da *primeira* quinzena de *FEVEREIRO* \n\n⚠️É contabilizada a entrega na data da finalização, não na data de criação do romaneio, por isso, um romaneio/CAF pode ter entregas em dois fechamentos."
     
     #if executarEm_hora_minuto(18,15):      
     
